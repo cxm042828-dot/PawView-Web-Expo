@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PawView 반려동물 스마트 모니터링</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+  /* 保留元素供现有代码使用，但不在界面显示 */
+  #dogVisionModelStatus,
+  #loadDogVisionButton,
+  #startDogVisionButton,
+  #stopDogVisionButton,
+  #soundModelStatus,
+  #loadSoundModelButton {
+    display: none !important;
+  }
+
+  /* 隐藏狗狗识别面板里原来的技术按钮容器 */
+  #dogVisionPanel > .camera-controls {
+    display: none !important;
+  }
+  /* 隐藏标题下的技术说明 */
+#dogVisionPanel > .panel-heading p,
+#soundMonitorPanel > .panel-heading p {
+  display: none !important;
+}
+
+/* 隐藏画面识别面板中的长篇开发说明 */
+#dogVisionPanel > .small-disclaimer {
+  display: none !important;
+}
+
+/* 不显示麦克风设备名称，保留麦克风开关状态 */
+#micDeviceName {
+  display: none !important;
+}
+/* 摄像头下方的识别结果，不再显示成独立大卡片 */
+.camera-panel > #dogVisionPanel,
+.camera-panel > #soundMonitorPanel {
+  width: 100%;
+  min-width: 0;
+  margin: 18px 0 0;
+  padding: 18px 0 0;
+  border: 0;
+  border-top: 1px solid #e4ece8;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+</style>
+
+</head>
+<body>
+  
+<!-- PawView 登录注册页面 -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+
+    <div class="auth-logo">🐾</div>
+    <h1>PawView</h1>
+    <p class="auth-subtitle">반려동물 스마트 케어</p>
+
+    <!-- 登录表单 -->
+    <form id="loginForm" class="auth-form">
+      <h2>로그인</h2>
+      <p>계정에 로그인하고 반려동물을 관리하세요.</p>
+
+      <label for="loginEmail">이메일</label>
+      <input
+        id="loginEmail"
+        type="email"
+        placeholder="이메일 주소"
+        autocomplete="email"
+        required
+      >
+
+      <label for="loginPassword">비밀번호</label>
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="비밀번호"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit" class="auth-submit">
+        로그인
+      </button>
+
+      <button
+        type="button"
+        id="showRegisterButton"
+        class="auth-switch"
+      >
+        계정이 없으신가요? 회원가입
+      </button>
+
+      <button
+        type="button"
+        id="resetPasswordButton"
+        class="auth-forgot"
+      >
+        비밀번호를 잊으셨나요?
+      </button>
+    </form>
+
+    <!-- 注册表单 -->
+    <form id="registerForm" class="auth-form" hidden>
+      <h2>회원가입</h2>
+      <p>새로운 PawView 계정을 만들어 보세요.</p>
+
+      <label for="registerEmail">이메일</label>
+      <input
+        id="registerEmail"
+        type="email"
+        placeholder="이메일 주소"
+        autocomplete="email"
+        required
+      >
+
+      <label for="registerPassword">비밀번호</label>
+      <input
+        id="registerPassword"
+        type="password"
+        placeholder="6자 이상 입력"
+        minlength="6"
+        autocomplete="new-password"
+        required
+      >
+
+      <label for="registerPasswordConfirm">비밀번호 확인</label>
+      <input
+        id="registerPasswordConfirm"
+        type="password"
+        placeholder="비밀번호 다시 입력"
+        minlength="6"
+        autocomplete="new-password"
+        required
+      >
+
+      <button type="submit" class="auth-submit">
+        회원가입
+      </button>
+
+      <button
+        type="button"
+        id="showLoginButton"
+        class="auth-switch"
+      >
+        이미 계정이 있으신가요? 로그인
+      </button>
+    </form>
+
+    <p id="authMessage" class="auth-message" role="status"></p>
+
+  </div>
+</div>
+<!-- PawView 로그인 등록页面结束 -->
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🐾</div>
+        <div><strong>PawView</strong><small>반려동물 스마트 케어</small></div>
+      </div>
+      <div class="pet-switcher">
+       <div class="pet-avatar" id="petAvatar">🐶</div>
+<div class="pet-meta">
+  <strong id="petName">두두</strong>
+  <small id="petTypeLabel">강아지 · 홈 모니터링</small>
+</div>
+<select id="petSelect" aria-label="반려동물 선택">
+  <option value="dog" selected>강아지</option>
+  <option value="cat">고양이 · 데모</option>
+</select>
+
+      </div>
+      <nav class="nav-menu" aria-label="주 메뉴">
+        <button class="nav-item active" data-page="monitor"><span>▦</span> 실시간 모니터링</button>
+        <button class="nav-item" data-page="report">
+          <span>⌁</span> 건강 리포트
+        </button>
+        <button class="nav-item" data-page="community" type="button">
+  <span>☏</span> 양육 커뮤니티
+</button>
+
+        <button class="nav-item" data-page="location"><span>⌖</span> 위치 및 안전</button>
+        <button class="nav-item" data-page="settings"><span>⚙</span> 기기 설정</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="connection-dot"></div>
+        <div><strong>데모 모드</strong><small>현재 시뮬레이션 데이터를 사용 중입니다</small></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayLabel">반려동물 생활 상태</p>
+          <h1 id="pageTitle">실시간 모니터링</h1>
+        </div>
+        <div class="topbar-right">
+          <span class="demo-badge">원격 기기 미연결</span>
+          <button class="icon-button" id="notificationButton" title="알림 확인" aria-label="알림 확인">♧<i id="notificationCount" style="display: none;">0</i></button>
+          <div class="user-avatar">나</div>
+        </div>
+      </header>
+
+      <section class="page active" id="page-monitor">
+        <div class="welcome-row home-pet-card">
+  <div class="home-pet-info">
+    <div class="home-pet-avatar" id="homePetAvatar" aria-hidden="true">🐶</div>
+
+    <div class="home-pet-details">
+      <h2 id="welcomePet">두두</h2>
+
+      <p class="home-pet-meta">
+        <span id="homePetBreed">품종 미등록</span>
+        <span aria-hidden="true"> · </span>
+        <span id="homePetAge">생일 미등록</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="date-pill" id="datePill">오늘</div>
+</div>
+
+        <div class="stats-grid home-summary">
+  <article class="stat-card">
+    <div class="stat-icon green">◷</div>
+    <div>
+      <p>오늘 움직임 감지 시간</p>
+      <strong id="activityStat">—</strong>
+      <span class="stat-note">카메라 화면 변화 감지 누적 · 실제 운동량 아님</span>
+    </div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-icon orange">♧</div>
+    <div>
+      <p>오늘 감지 기록</p>
+      <strong id="homeEventCount">0건</strong>
+      <span class="stat-note" id="homeEventNote">
+        저장된 소리 감지 안내 기준
+      </span>
+    </div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-icon blue">⌖</div>
+    <div>
+      <p>현재 화면 감지</p>
+      <strong class="status-text" id="currentStatus">
+        감지 대기
+      </strong>
+      <span class="stat-note" id="statusSub">
+        카메라를 연결해 주세요
+      </span>
+    </div>
+  </article>
+</div>
+
+<!-- 保留旧代码使用的元素，不在页面显示 -->
+<span id="restStat" hidden>—</span>
+
+<article class="panel home-latest-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>최근 감지 안내</h3>
+      <p id="homeLatestTime">저장된 기록 없음</p>
+    </div>
+
+    <button
+      class="secondary-button"
+      id="homeViewEventsButton"
+      type="button"
+    >
+      전체 보기
+    </button>
+  </div>
+
+  <p id="homeLatestMessage" aria-live="polite">
+    아직 저장된 감지 안내가 없습니다.
+  </p>
+
+  <p class="small-disclaimer">
+    감지 안내는 이상 상태나 위험이 확인되었다는 뜻이 아닙니다.
+  </p>
+</article>
+
+
+        <div class="content-grid">
+          <article class="panel camera-panel">
+           <div class="panel-heading">
+  <div>
+    <h3>실시간 화면</h3>
+    <p>이 기기의 카메라 미리보기 · 원격 모니터링 아님</p>
+  </div>
+  <span class="live-label" id="cameraModeLabel">DEMO</span>
+</div>
+
+<!-- 摄像头来源切换 -->
+<div class="camera-source-switch" id="cameraSourceSwitch">
+  <button
+    type="button"
+    class="camera-source-btn is-active"
+    id="cameraSourcePhone"
+    aria-pressed="true"
+  >
+    📱 스마트폰
+  </button>
+
+  <button
+    type="button"
+    class="camera-source-btn"
+    id="cameraSourcePi"
+    aria-pressed="false"
+  >
+    📡 Raspberry Pi 4
+  </button>
+</div>
+
+<!-- 树莓派视频区域：尚未连接真实硬件 -->
+<div class="pi-preview" id="piPreview" hidden>
+  <div class="pi-preview-icon">📡</div>
+  <strong>Raspberry Pi 4 연결 대기</strong>
+  <p>
+    카메라 스트리밍 기능은 아직 연결되지 않았습니다.
+  </p>
+  <span>
+    하드웨어 및 영상 전송 방식 확인 후 연동 예정
+  </span>
+</div>
+
+            <div class="camera-scene" id="cameraScene">
+              <video id="cameraVideo" autoplay playsinline muted></video>
+              <div class="camera-placeholder" id="cameraPlaceholder">
+              
+<div class="placeholder-icon">📷</div>
+<strong>카메라가 연결되지 않았어요</strong>
+<span>
+  카메라를 연결하면 반려동물의 모습을 확인할 수 있어요.
+  현재 원격 모니터링 기기는 연결되지 않았습니다.
+</span>
+
+              </div>
+              <div class="scene-window"><div class="sun"></div><div class="window-pane"></div></div>
+              <div class="scene-shelf"></div><div class="scene-plant">🌿</div>
+              <div class="scene-rug"></div>
+              <div class="scene-pet" id="scenePet">🐕</div>
+              <div class="scene-toy">🧶</div>
+              <div class="scene-time" id="sceneTime">CAM 01 · DEMO</div>
+              <div class="scene-caption" id="sceneCaption">두두의 시뮬레이션 화면</div>
+            </div>
+
+<div class="camera-status">
+
+  <!-- 主要状态始终显示 -->
+  <p id="cameraConnectionStatus" aria-live="polite">
+    카메라: 연결 전
+  </p>
+
+  <!-- 其他技术信息按需展开 -->
+  <details class="camera-extra-status">
+    <summary>연결 상세 정보 보기</summary>
+
+    <div class="camera-extra-status-content">
+      <p id="cameraVideoStatus">화면: 대기 중</p>
+      <p id="cameraNetworkStatus">네트워크: 확인 중</p>
+      <p id="cameraPreviewTime">
+        미리보기 시간: 00:00:00
+      </p>
+    </div>
+  </details>
+
+</div>
+
+
+<details class="camera-help">
+  <summary>카메라 기능 안내 보기</summary>
+  <p>
+    미리보기 시간은 카메라를 연결한 뒤 지난 시간입니다.
+    녹화 시 카메라 화면과 마이크 소리가 함께 저장됩니다.
+    인터넷 연결이 끊겨도 로컬 카메라 미리보기는 계속될 수 있습니다.
+  </p>
+</details>
+
+
+            <div class="camera-controls">
+              <button class="primary-button" id="connectCameraButton">◎ 실제 카메라 연결</button>
+              <button class="secondary-button" id="stopCameraButton" disabled>■ 카메라 연결 해제</button>
+              <button class="secondary-button" id="playButton">▶ 시뮬레이션 화면 재생</button>
+              <button class="secondary-button" id="snapshotButton">▣ 화면 캡처 저장</button>
+              <button
+  class="secondary-button"
+  id="recordCameraButton"
+  type="button"
+  disabled
+>
+  ● 녹화 시작
+</button>
+
+<span
+  id="recordCameraStatus"
+  role="status"
+  aria-live="off"
+>
+  녹화 안 함 · 소리 포함 · 최대 60초
+</span>
+
+
+              <span class="camera-hint" id="cameraHint">실제 카메라 연결 전 · 시뮬레이션 화면</span>
+            </div>
+
+<!-- Raspberry Pi 4 摄像头配置 -->
+<details class="pi-camera-panel" id="piCameraPanel">
+  <summary class="pi-camera-summary">
+    <span>📡 Raspberry Pi 4 카메라</span>
+    <span id="piCameraBadge" class="pi-camera-badge">
+      연동 전
+    </span>
+  </summary>
+
+  <div class="pi-camera-body">
+    <p class="pi-camera-description">
+      Raspberry Pi 4 카메라 연결 정보를 설정합니다.
+      실제 영상 연동은 하드웨어 준비 후 진행합니다.
+    </p>
+
+    <form id="piCameraForm">
+      <div class="pi-camera-field">
+        <label for="piCameraName">기기 이름</label>
+        <input
+          id="piCameraName"
+          type="text"
+          value="Raspberry Pi 4"
+          maxlength="50"
+          required
+        >
+      </div>
+
+      <div class="pi-camera-field">
+        <label for="piCameraHost">IP 주소 또는 호스트명</label>
+        <input
+          id="piCameraHost"
+          type="text"
+          placeholder="예: 192.168.0.25"
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <div class="pi-camera-field">
+        <label for="piCameraPort">포트 번호</label>
+        <input
+          id="piCameraPort"
+          type="number"
+          placeholder="예: 8554"
+          min="1"
+          max="65535"
+          inputmode="numeric"
+        >
+      </div>
+
+      <div class="pi-camera-field">
+        <label for="piCameraProtocol">영상 전송 방식</label>
+        <select id="piCameraProtocol">
+          <option value="unknown">
+            미정 · 팀 확인 필요
+          </option>
+          <option value="rtsp">RTSP</option>
+          <option value="mjpeg">HTTP / MJPEG</option>
+          <option value="webrtc">WebRTC</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="primary-button pi-camera-save"
+      >
+        설정 저장
+      </button>
+    </form>
+
+    <p
+      id="piCameraStatus"
+      class="pi-camera-status"
+      role="status"
+      aria-live="polite"
+    >
+      연결 정보가 저장되지 않았습니다.
+    </p>
+
+    <p class="pi-camera-note">
+      현재는 설정 저장 기능만 제공됩니다.
+      실제 연결 및 영상 송출 기능은 개발 예정입니다.
+    </p>
+  </div>
+</details>
+<!-- Raspberry Pi 4 摄像头配置结束 -->
+
+           <details class="monitor-advanced">
+  <summary>고급 감지 기능 · AI / 소리 분석</summary>
+  <div class="monitor-advanced-content"> 
+            <article class="panel" id="dogVisionPanel">
+  <div class="panel-heading">
+    <div>
+      <h3>강아지 상태</h3>
+      <p>이 기기의 카메라 화면에서 강아지를 찾아요.</p>
+    </div>
+  </div>
+
+  <p id="dogVisionModelStatus" role="status">
+    강아지 인식 모델 미연결
+  </p>
+
+  <div class="camera-controls">
+    <button
+      id="loadDogVisionButton"
+      class="secondary-button"
+      type="button"
+    >
+      강아지 인식 모델 불러오기
+    </button>
+
+    <button
+      id="startDogVisionButton"
+      class="primary-button"
+      type="button"
+      disabled
+    >
+      강아지 감지 시작
+    </button>
+
+    <button
+      id="stopDogVisionButton"
+      class="secondary-button"
+      type="button"
+      disabled
+    >
+      감지 중지
+    </button>
+  </div>
+
+  <p id="dogVisionResult" role="status" aria-live="polite">
+    카메라 연결 전
+  </p>
+
+  <p id="dogMotionStatus" role="status" aria-live="polite">
+    활동 상태: 분석 대기
+  </p>
+
+  <p id="dogStillTime">
+    움직임이 적은 시간: 00:00
+  </p>
+
+  <p class="small-disclaimer">
+    강아지가 감지된 영역의 화면 변화를 참고합니다.
+    카메라 흔들림, 조명 변화, 주변 움직임에 영향을 받을 수 있어요.
+    잠을 자거나 쉬는 중일 수 있으므로, 오래 움직이지 않는다고
+    이상 상태를 의미하지는 않습니다.
+  </p>
+
+  <p class="small-disclaimer">
+    강아지를 놓치거나 다른 물체를 잘못 알아볼 수 있어요.
+    감지되지 않았다고 강아지가 없다는 뜻은 아닙니다.
+    사진이나 영상 속 강아지도 감지될 수 있어요.
+  </p>
+
+  <p class="small-disclaimer">
+    모델을 처음 불러올 때는 인터넷 연결이 필요합니다.
+    분석은 이 기기에서 진행하며, 이 기능은 카메라 영상을
+    서버로 전송하거나 저장하지 않습니다.
+    자세·활동·건강 상태는 아직 판단하지 않습니다.
+  </p>
+</article>
+
+<article class="panel" id="soundMonitorPanel">
+  <div class="panel-heading">
+    <div>
+      <h3>강아지 소리 감지</h3>
+      <p>이 기기의 마이크로 주변 소리를 확인해요.</p>
+    </div>
+  </div>
+
+  <p id="soundModelStatus" role="status" aria-live="polite">
+    소리 분석 모델 미연결
+  </p>
+
+  <button
+    class="secondary-button"
+    id="loadSoundModelButton"
+    type="button"
+  >
+    소리 분석 모델 불러오기
+  </button>
+
+  <p id="micStatus" role="status" aria-live="polite">
+    마이크 꺼짐
+  </p>
+
+  <p id="micDeviceName">
+    사용 중인 마이크: 연결 전
+  </p>
+
+  <div class="camera-controls">
+    <button
+      class="primary-button"
+      id="startMicButton"
+      type="button"
+    >
+      🎤 마이크 켜기
+    </button>
+
+    <button
+      class="secondary-button"
+      id="stopMicButton"
+      type="button"
+      disabled
+    >
+      ■ 마이크 끄기
+    </button>
+  </div>
+
+  <div class="tip-box">
+    <div>
+      <strong>소리 상태</strong>
+
+      <p id="soundAnalysisStatus" role="status">
+        소리 감지 대기
+      </p>
+
+      <p id="soundAnalysisResult" aria-live="polite">
+        아직 분석 결과가 없습니다.
+      </p>
+
+      <p id="dogSoundState" role="status" aria-live="polite">
+        마이크를 켜면 반복되는 소리인지 확인해요.
+      </p>
+    </div>
+  </div>
+
+  <p class="small-disclaimer">
+        이 기기에서 분석하며 영상·음성은 자동 저장하거나 전송하지 않습니다.
+    반복 소리 안내의 시간과 최근 화면 판단은 이 기기에 기록합니다.
+    감지 결과는 틀릴 수 있으며 건강·위험 판단을 대신하지 않습니다.
+  </p>
+</article>
+  </div>
+</details>
+          </article>
+
+          <article class="panel quick-panel">
+
+            <div class="panel-heading"><div><h3>빠른 실행</h3><p>자주 사용하는 반려동물 관리 기능</p></div></div>
+            <button class="quick-action" id="refreshButton" type="button">
+  <span class="quick-icon mint">＋</span>
+  <span>
+    <strong>돌봄 기록하기</strong>
+    <small>식사 · 음수 · 산책 · 메모</small>
+  </span>
+  <b>›</b>
+</button>
+            <button class="quick-action" id="soundButton"><span class="quick-icon peach">♫</span><span><strong>소리 알림</strong><small id="soundLabel">현재 꺼져 있음</small></span><b id="soundArrow">›</b></button>
+            <button class="quick-action" id="safeButton"><span class="quick-icon lavender">⌖</span><span><strong>안전 구역</strong><small id="safeLabel">안전 구역 모니터링이 켜져 있습니다</small></span><b id="safeArrow">›</b></button>
+            <div class="tip-box"><span>✦</span><div><strong>오늘의 팁</strong><p id="tipText">반려동물의 평소 활동 패턴을 관찰하고, 뚜렷한 변화가 있으면 관심을 가져 주세요.</p></div></div>
+          </article>
+        </div>
+        
+
+<article class="panel care-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>돌봄 기록</h3>
+      <p>식사, 음수, 산책과 메모를 직접 기록하세요.</p>
+    </div>
+  </div>
+<div class="stats-grid">
+  <article class="stat-card">
+    <div class="stat-icon orange">🍚</div>
+    <div>
+      <p>오늘 기록한 식사량</p>
+      <strong id="todayFood">미기록</strong>
+      <span class="stat-note">수량을 입력한 기록의 합계</span>
+    </div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-icon blue">💧</div>
+    <div>
+      <p>오늘 기록한 음수량</p>
+      <strong id="todayWater">미기록</strong>
+      <span class="stat-note">수량을 입력한 기록의 합계</span>
+    </div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-icon green">🐕</div>
+    <div>
+      <p>오늘 기록한 산책 시간</p>
+      <strong id="todayWalk">미기록</strong>
+      <span class="stat-note">시간을 입력한 기록의 합계</span>
+    </div>
+  </article>
+</div>
+
+<p class="small-disclaimer">
+  오늘 합계는 이 기기의 날짜를 기준으로 합니다.
+  직접 입력한 기록만 합산하며, 실제 하루 전체 섭취량이나
+  자동 측정 결과를 의미하지 않습니다.
+</p>
+<details id="careDetails" class="care-details">
+  <summary>＋ 기록 작성 및 내역 보기</summary>
+  <form id="careForm" class="care-form">
+    <label for="careType">기록 종류</label>
+    <select id="careType">
+      <option value="food">🍚 식사</option>
+      <option value="water">💧 음수</option>
+      <option value="walk">🐕 산책</option>
+      <option value="note">📝 메모</option>
+    </select>
+
+    <label for="careAmount" id="careAmountLabel">
+      식사량 (g, 선택)
+    </label>
+    <input
+      id="careAmount"
+      type="number"
+      min="0.1"
+      step="0.1"
+      max="100000"
+      inputmode="decimal"
+      placeholder="예: 80"
+    >
+<label for="careTime">기록 시각 (선택)</label>
+<input
+  id="careTime"
+  type="datetime-local"
+>
+
+<p class="small-disclaimer">
+  비워 두면 저장 시각으로 기록합니다.
+  지난 기록을 추가할 때는 실제 시각을 선택해 주세요.
+  미래 시각은 입력할 수 없습니다.
+</p>
+
+    <label for="careNote">메모 (선택)</label>
+    <textarea
+      id="careNote"
+      rows="3"
+      maxlength="500"
+      placeholder="예: 평소보다 천천히 먹었어요."
+    ></textarea>
+
+    <button class="primary-button" type="submit">
+      ＋ 기록 저장
+    </button>
+  </form>
+
+  <p class="small-disclaimer">
+    기록 시간은 선택한 시각이며, 선택하지 않으면 저장 시각입니다.현재 기기에만 저장되며,
+    앱 삭제 또는 사이트 데이터 삭제 시 사라질 수 있습니다.
+  </p>
+<button
+  class="secondary-button full-width"
+  id="exportCareButton"
+  type="button"
+>
+  ↓ 돌봄 기록 내보내기 (CSV)
+</button>
+<div class="care-form">
+  <label for="careFilter">기록 종류별 보기</label>
+  <select id="careFilter">
+    <option value="all">전체 기록</option>
+    <option value="food">🍚 식사</option>
+    <option value="water">💧 음수</option>
+    <option value="walk">🐕 산책</option>
+    <option value="note">📝 메모</option>
+  </select>
+</div>
+
+<p class="small-disclaimer">
+  선택한 종류의 기록만 표시합니다. 오늘 합계는 바뀌지 않습니다.
+</p>
+
+ <div id="careRecords" class="care-records" aria-live="polite"></div>
+
+</details>
+</article>
+
+
+<article class="panel activity-panel">
+
+  <div class="panel-heading">
+    <div>
+      <h3>오늘의 움직임 감지 누적</h3>
+      <p>상세 그래프는 펼쳐서 확인할 수 있습니다.</p>
+    </div>
+
+    <button class="text-button" data-goto="report">
+      리포트 보기 →
+    </button>
+  </div>
+
+  <details class="activity-chart-details">
+    <summary>활동 그래프 보기</summary>
+
+    <div
+      class="activity-chart"
+      id="activityChart"
+      aria-label="오늘 감지된 움직임 누적 통계"
+    ></div>
+
+    <div class="chart-legend">
+      <span></span>
+      화면 변화가 많았던 시간
+    </div>
+
+  </details>
+
+</article>
+
+      </section>
+
+      <section class="page" id="page-report">
+  <div class="welcome-row">
+    <div>
+      <h2>일상 및 활동 리포트</h2>
+      <p>기록과 측정 데이터의 출처를 구분하여 보여드립니다.</p>
+    </div>
+    <span class="date-pill">이 기기의 날짜 기준</span>
+  </div>
+
+  <details class="panel report-source-panel">
+  <summary class="report-source-summary">
+    ⓘ 데이터 출처 및 측정 기준
+  </summary>
+    <div class="panel-heading">
+      <div>
+        <h3>데이터 안내</h3>
+        <p>측정되지 않은 항목은 숫자로 채우지 않습니다.</p>
+      </div>
+    </div>
+
+    <p class="small-disclaimer">
+      활동 시간은 카메라에 강아지가 감지되는 동안
+화면 변화로 추정한 움직임 누적 시간입니다.
+휴식 시간은 화면 변화가 적었던 시간으로,
+실제 수면 시간이나 건강 상태를 의미하지 않습니다.
+짖음 횟수는 별도 소리 분석 결과가 있어야 표시됩니다.
+식사량과 음수량은 직접 입력한 기록입니다.
+    </p>
+  </details>
+
+  <div class="stats-grid report-stats">
+    <article class="stat-card">
+      <div class="stat-icon green">◷</div>
+      <div>
+        <p>오늘 움직임 감지 시간</p>
+        <strong id="avgActivity">—</strong>
+        <span class="stat-note">카메라 감지 중 화면 변화 누적</span>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon orange">☾</div>
+      <div>
+        <p>오늘 화면 변화가 적었던 시간</p>
+        <strong id="avgRest">—</strong>
+        <span class="stat-note">화면 변화가 적었던 시간 · 실제 수면 시간 아님</span>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon blue">♫</div>
+      <div>
+        <p>오늘 짖음 횟수</p>
+        <strong id="reportBarkCount">—</strong>
+        <span class="stat-note">데이터 없음 · 소리 분석 결과와 별도</span>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon orange">♧</div>
+      <div>
+        <p>오늘 감지 안내</p>
+        <strong id="alertStat">—</strong>
+        <span class="stat-note">
+          저장된 안내 기준 · 확인된 이상 횟수 아님
+        </span>
+      </div>
+    </article>
+  </div>
+
+  <article class="panel report-trend-panel">
+    <div class="panel-heading">
+      <div>
+        <h3>주간 활동 변화</h3>
+        <p>출처: 이 기기 카메라 화면 변화 감지 · 최근 7일</p>
+      </div>
+    </div>
+
+    <div class="weekly-chart" id="weeklyChart">
+      실제 활동 데이터가 없어 그래프를 표시하지 않습니다.
+    </div>
+  </article>
+
+  <article class="panel report-trend-panel">
+    <div class="panel-heading">
+      <div>
+        <h3>기간별 식사·음수 기록</h3>
+        <p>출처: 직접 입력한 돌봄 기록 · 센서 측정 아님</p>
+      </div>
+    </div>
+
+    <div class="report-range-control">
+  <label for="reportIntakeRange">조회 기간</label>
+
+  <select id="reportIntakeRange">
+    <option value="7">최근 7일</option>
+    <option value="30">최근 30일</option>
+  </select>
+</div>
+
+<p class="small-disclaimer">
+  선택한 기간에 직접 입력한 강아지 식사·음수 기록입니다.
+  수량이 있는 기록만 합산하며, 미기록은 0을 의미하지 않습니다.
+</p>
+
+<div class="report-intake-summary" aria-live="polite">
+  <div>
+    <span>기간 내 식사 기록량</span>
+    <strong id="reportFoodTotal">—</strong>
+    <small id="reportFoodDays">수량 기록 확인 중</small>
+  </div>
+
+  <div>
+    <span>기간 내 음수 기록량</span>
+    <strong id="reportWaterTotal">—</strong>
+    <small id="reportWaterDays">수량 기록 확인 중</small>
+  </div>
+</div>
+
+<div id="reportIntakeTable" class="report-intake-table"></div>
+<button
+  class="secondary-button"
+  id="exportReportIntakeButton"
+  type="button"
+>
+  식사·음수 통계 CSV 내보내기
+</button>
+
+<p class="small-disclaimer">
+  현재 선택한 기간의 수동 기록 통계를 내보냅니다.
+  데이터 복원용 백업 파일이 아닙니다.
+</p>
+
+  </article>
+
+  <article class="panel report-intake-panel">
+    <div class="panel-heading">
+      <div>
+        <h3>식사량 및 음수량 변화</h3>
+        <p>출처: 직접 입력한 돌봄 기록 · 센서 측정 아님</p>
+      </div>
+    </div>
+
+    <p class="report-empty">
+      다음 단계에서 저장된 식사·음수 기록을 날짜별로 연결합니다.
+      수량을 입력하지 않은 기록은 합계에 포함하지 않습니다.
+    </p>
+
+    <p class="small-disclaimer">
+      직접 입력한 양은 실제 섭취량과 다를 수 있습니다.
+      향후 센서 측정값과 수동 기록은 구분하여 표시합니다.
+    </p>
+  </article>
+
+  <article class="panel records-panel">
+    <div class="panel-heading">
+      <div>
+        <h3>감지 안내 기록</h3>
+        <p>반복 소리 안내와 당시 최근 화면 판단을 확인합니다.</p>
+      </div>
+    </div>
+
+    <div id="recordList" class="record-list"></div>
+  </article>
+  <!-- PawView 综合历史中心 -->
+<article class="panel media-history-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>📁 PawView 종합 기록</h3>
+      <p>사진, 동영상, AI 인식 및 반려동물 활동 기록</p>
+    </div>
+  </div>
+
+  <div class="history-filters">
+    <label for="historyDateFilter">날짜별 조회</label>
+    <input
+      type="date"
+      id="historyDateFilter"
+    >
+
+    <label for="historyTypeFilter">기록 종류</label>
+    <select id="historyTypeFilter">
+      <option value="all">전체 기록</option>
+      <option value="photo">📷 사진</option>
+      <option value="video">🎥 동영상</option>
+      <option value="sound">🔊 소리 감지</option>
+      <option value="ai">🤖 AI 인식</option>
+      <option value="activity">🐾 활동 기록</option>
+    </select>
+  </div>
+
+  <div class="history-actions">
+    <button
+      type="button"
+      class="secondary-button"
+      id="historyShowAllButton"
+    >
+      전체 기록 보기
+    </button>
+
+    <button
+      type="button"
+      class="secondary-button"
+      id="historyFavoritesButton"
+    >
+      ★ 즐겨찾기
+    </button>
+  </div>
+
+  <div
+    id="mediaHistoryList"
+    class="media-history-list"
+    aria-live="polite"
+  >
+    <p class="report-empty">
+      기록을 불러오는 중입니다.
+    </p>
+  </div>
+</article>
+</section>
+
+<section class="page" id="page-community">
+  <details class="panel community-rules">
+  <summary>커뮤니티 이용 안내</summary>
+
+  <ul>
+    <li>강아지 양육 경험을 존중하는 말로 나눠 주세요.</li>
+    <li>광고·도배·욕설·괴롭힘을 게시하지 마세요.</li>
+    <li>전화번호·주소·타인의 개인정보를 공개하지 마세요.</li>
+    <li>위험한 행동이나 동물 학대를 조장하지 마세요.</li>
+    <li>
+      게시글은 개인의 경험이며 수의사의 진료를 대신하지 않습니다.
+      응급 상황에서는 동물병원에 문의하세요.
+    </li>
+    <li>
+      위반 내용은 검토 후 숨김 처리되거나 작성이 제한될 수 있습니다.
+    </li>
+  </ul>
+
+  <p class="small-disclaimer">
+    게시한 글·댓글과 닉네임은 다른 사용자에게 공개됩니다.
+    현재 익명 신분은 앱 삭제·데이터 초기화·기기 변경 시
+    되찾지 못할 수 있습니다.
+  </p>
+</details>
+
+  <div class="welcome-row">
+    <div>
+      <h2>강아지 양육 커뮤니티</h2>
+      <p>일상과 경험을 나누세요. 게시글은 전문 진료를 대신하지 않습니다.</p>
+    </div>
+  </div>
+<article class="panel community-profile-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>내 커뮤니티 프로필</h3>
+      <p>이메일과 비밀번호 없이 닉네임으로 시작하세요.</p>
+    </div>
+  </div>
+
+  <form id="communityNicknameForm">
+    <label for="communityNickname">닉네임</label>
+
+    <input
+      id="communityNickname"
+      type="text"
+      minlength="2"
+      maxlength="20"
+      placeholder="2~20자"
+      autocomplete="off"
+      required
+    >
+
+    <button
+      class="secondary-button"
+      id="communityNicknameSave"
+      type="submit"
+    >
+      닉네임 저장
+    </button>
+  </form>
+
+  <p id="communityProfileStatus" role="status">
+    닉네임을 설정하면 글과 댓글을 작성할 수 있습니다.
+  </p>
+
+  <p class="small-disclaimer">
+    현재는 계정 연결 기능이 없습니다.
+    앱 삭제·데이터 초기화·기기 변경 시 기존 익명 신분을
+    되찾지 못할 수 있습니다. 개인정보를 닉네임에 넣지 마세요.
+  </p>
+</article>
+<details class="community-write-details">
+  <summary>＋ 새 글 작성</summary>
+<article class="panel community-compose-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>글쓰기</h3>
+      <p>닉네임을 먼저 저장한 후 경험과 질문을 나눠 주세요.</p>
+    </div>
+  </div>
+
+  <form id="communityPostForm">
+    <label for="communityPostCategory">분류</label>
+    <select id="communityPostCategory" required>
+      <option value="daily">일상</option>
+      <option value="food">식사</option>
+      <option value="training">훈련</option>
+      <option value="question">질문</option>
+    </select>
+
+    <label for="communityPostTitle">제목</label>
+    <input
+      id="communityPostTitle"
+      type="text"
+      maxlength="80"
+      placeholder="제목을 입력해 주세요"
+      required
+    >
+
+    <label for="communityPostContent">내용</label>
+    <textarea
+      id="communityPostContent"
+      rows="5"
+      maxlength="3000"
+      placeholder="개인정보를 제외하고 경험이나 질문을 작성해 주세요."
+      required
+    ></textarea>
+
+    <p class="small-disclaimer">
+      게시글과 닉네임은 다른 사용자에게 공개됩니다.
+      전화번호·주소 등 개인정보를 올리지 마세요.
+    </p>
+
+    <label class="community-consent">
+  <input
+    id="communityPostConsent"
+    type="checkbox"
+    required
+  >
+  <span>
+    이용 안내를 확인했으며, 개인정보와 유해 내용을 제외하고
+    공개 게시하는 데 동의합니다.
+  </span>
+</label>
+
+<button
+  class="secondary-button"
+  id="communityPostSubmit"
+  type="submit"
+>
+  게시하기
+</button>
+
+  </form>
+
+  <p id="communityPostStatus" role="status"></p>
+</article>
+</details>
+
+  <article class="panel community-feed-panel">
+    <div class="panel-heading">
+      <div>
+        <h3>최근 게시글</h3>
+        <p>누구나 읽을 수 있으며, 글쓰기는 닉네임 설정 후 가능합니다.</p>
+      </div>
+
+      <button
+        class="secondary-button"
+        id="communityRefreshButton"
+        type="button"
+      >
+        새로고침
+      </button>
+    </div>
+
+    <p id="communityListStatus" role="status"></p>
+    <div id="communityPostList"></div>
+  </article>
+  <article
+  class="panel community-detail-panel"
+  id="communityPostDetail"
+  hidden
+>
+  <div class="panel-heading">
+    <div>
+      <h3 id="communityDetailTitle">게시글</h3>
+      <p id="communityDetailMeta"></p>
+    </div>
+
+    <button
+      class="secondary-button"
+      id="communityDetailClose"
+      type="button"
+    >
+      닫기
+    </button>
+  </div>
+
+  <p id="communityDetailContent"></p>
+
+  <h3>댓글</h3>
+  <p id="communityCommentStatus" role="status"></p>
+  <div id="communityCommentList"></div>
+
+  <form id="communityCommentForm">
+    <label for="communityCommentInput">댓글 작성</label>
+
+    <textarea
+      id="communityCommentInput"
+      rows="3"
+      maxlength="1000"
+      placeholder="개인정보를 제외하고 댓글을 작성해 주세요."
+      required
+    ></textarea>
+
+    <label class="community-consent">
+  <input
+    id="communityCommentConsent"
+    type="checkbox"
+    required
+  >
+  <span>
+    이용 안내를 확인했으며, 이 댓글이 공개된다는 점을 이해했습니다.
+  </span>
+</label>
+
+<button
+  class="secondary-button"
+  id="communityCommentSubmit"
+  type="submit"
+>
+  댓글 게시
+</button>
+
+  </form>
+</article>
+
+</section>
+
+      <section class="page" id="page-location">
+        <div class="welcome-row"><div><h2>위치 및 안전 구역</h2><p>현재 위치는 시뮬레이션이며 실제 GPS 위치가 아닙니다.</p></div><span class="demo-badge">위치 시뮬레이션</span></div>
+        <div class="location-grid">
+          <article class="panel map-panel"><div class="panel-heading"><div><h3 id="mapTitle">실내 활동 구역</h3><p id="mapSubtitle">가정 내 안전 구역 · 예시 화면</p></div><span class="safe-pill" id="safePill">구역 내</span></div>
+            <div class="fake-map"><div class="map-grid"></div><div class="safe-zone"></div><div class="map-home">⌂<small>집</small></div><div class="map-pet" id="mapPet">🐶</div><div class="map-label label-one">휴식 구역</div><div class="map-label label-two">활동 구역</div><div class="map-caption">예시 지도 · 실제 위치 아님</div></div>
+            <div class="map-footer"><span><i class="legend-dot"></i> 안전 구역</span><span><i class="legend-pet"></i> 반려동물 시뮬레이션 위치</span></div>
+          </article>
+          <article class="panel safety-panel"><div class="panel-heading"><div><h3>안전 설정</h3><p>스위치를 눌러 기능을 체험해 보세요.</p></div></div>
+            <!-- 保护者位置联动隐私快门：演示模式 -->
+<div class="setting-row">
+  <div>
+    <strong>보호자 위치 연동</strong>
+    <small>보호자 재실 상태를 시뮬레이션합니다.</small>
+  </div>
+  <label class="switch">
+    <input id="guardianHomeToggle" type="checkbox">
+    <span></span>
+  </label>
+</div>
+
+<div class="setting-row">
+  <div>
+    <strong>보호자 위치 상태</strong>
+    <small id="guardianLocationStatus">외출 중 (시뮬레이션)</small>
+  </div>
+</div>
+
+<div class="setting-row">
+  <div>
+    <strong>프라이버시 셔터</strong>
+    <small id="privacyShutterStatus">열림 · 카메라 사용 가능</small>
+  </div>
+</div>
+
+<p class="small-disclaimer">
+  보호자 위치와 셔터 상태는 시연용입니다.
+  실제 GPS 및 하드웨어 셔터와 연결되지 않았습니다.
+</p>
+            <div class="setting-row"><div><strong>안전 구역 시뮬레이션</strong><small>반려동물이 설정된 구역 안에 있는지 시뮬레이션합니다.</small></div><label class="switch"><input id="safeToggle" type="checkbox" checked><span></span></label></div>
+            <div class="setting-row"><div><strong>이탈 알림 시뮬레이션</strong><small>예시 동작만 확인하며 실제 위치 감지나 푸시 알림은 제공하지 않습니다.</small></div><label class="switch"><input id="alertToggle" type="checkbox" checked><span></span></label></div>
+            <div class="setting-row"><div><strong>일일 활동 요약</strong><small>하루 동안의 활동 변화를 표시합니다.</small></div><label class="switch"><input id="summaryToggle" type="checkbox" checked><span></span></label></div>
+            <button class="primary-button full-width" id="simulateExitButton">안전 구역 이탈 시뮬레이션</button>
+            <p class="small-disclaimer">프로토타입용 기능입니다. 실제 위치 추적에는 목걸이형 GPS/위치 모듈과 서버 데이터가 필요합니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="welcome-row"><div><h2>기기 설정</h2><p>데모 기기와 프로토타입 설정을 관리합니다.</p></div></div>
+        <article class="panel settings-page-panel">
+          <div class="panel-heading">
+  <div>
+    <h3>우리 강아지 프로필</h3>
+    <p>강아지 정보를 저장하고 수정하세요.</p>
+  </div>
+</div>
+
+<form id="dogProfileForm" class="care-form">
+  <div class="dog-profile-manager">
+  <label for="dogProfileSelect">강아지 프로필 선택</label>
+
+  <select id="dogProfileSelect">
+    <option value="dog-default">두두</option>
+  </select>
+
+  <div class="dog-profile-manager-buttons">
+    <button
+      id="addDogProfileButton"
+      type="button"
+      class="secondary-button"
+    >
+      + 강아지 추가
+    </button>
+
+    <button
+      id="deleteDogProfileButton"
+      type="button"
+      class="secondary-button"
+    >
+      프로필 삭제
+    </button>
+  </div>
+
+</div>
+
+<!-- PawView 반려동물 정보 요약 카드 -->
+<div id="dogProfileSummary" class="dog-profile-summary">
+  <div class="dog-summary-header">
+    <div class="dog-summary-avatar">
+      <span id="dogSummaryDefaultAvatar">🐾</span>
+      <img id="dogSummaryPhoto" alt="반려동물 사진" hidden>
+    </div>
+
+    <div class="dog-summary-title">
+      <span class="dog-summary-label">MY PET</span>
+      <h3 id="dogSummaryName">반려동물</h3>
+      <p id="dogSummaryBreed">품종 미등록</p>
+    </div>
+  </div>
+
+  <div class="dog-summary-info">
+    <div class="dog-summary-item">
+      <span>🎂 나이</span>
+      <strong id="dogSummaryAge">미등록</strong>
+    </div>
+
+    <div class="dog-summary-item">
+      <span>⚖️ 체중</span>
+      <strong id="dogSummaryWeight">미등록</strong>
+    </div>
+
+    <div class="dog-summary-item">
+      <span>🐾 성별</span>
+      <strong id="dogSummaryGender">미등록</strong>
+    </div>
+  </div>
+
+  <p class="dog-summary-footer">
+    반려동물의 기본 정보를 한눈에 확인할 수 있습니다.
+  </p>
+</div>
+<details class="settings-fold">
+  <summary>프로필 상세 수정</summary>
+  <div class="settings-fold-content">
+<label for="dogName">이름 *</label>
+
+  <input
+    id="dogName"
+    type="text"
+    maxlength="30"
+    placeholder="예: 두두"
+    required
+  >
+
+<!-- PawView 宠物照片上传卡片 -->
+<div class="paw-photo-upload">
+
+  <div class="paw-photo-heading">
+    <strong>반려동물 프로필 사진</strong>
+    <span>선택 사항</span>
+  </div>
+
+  <!-- 保留原有文件选择 ID -->
+  <input
+    id="dogPhoto"
+    class="paw-photo-input"
+    type="file"
+    accept="image/*"
+  >
+
+  <!-- 保留原有照片预览与删除功能 -->
+  <div id="dogPhotoPreview" class="dog-photo-preview">
+
+    <div
+      id="dogPhotoDefaultAvatar"
+      class="dog-photo-default-avatar"
+      hidden
+    >
+      <span>🐾</span>
+      <strong>반려동물 사진을 등록해 주세요</strong>
+      <small>소중한 반려동물의 사진을 표시합니다.</small>
+    </div>
+
+    <img
+      id="dogPhotoPreviewImage"
+      alt="현재 선택한 강아지 프로필 사진"
+    >
+
+    <p class="paw-photo-caption">
+      사진 선택 후 프로필 저장을 눌러 주세요.
+    </p>
+
+    <label for="dogPhoto" class="paw-photo-choose">
+      <span aria-hidden="true">▣</span>
+      사진 선택 · 변경
+    </label>
+
+    <button
+      id="removeDogPhotoButton"
+      type="button"
+      class="secondary-button"
+    >
+      사진 삭제
+    </button>
+
+    <p class="paw-photo-hint">
+      이미지 파일 · 저장 시 사진 크기가 자동으로 조정됩니다.
+    </p>
+
+  </div>
+
+</div>
+<!-- PawView 宠物照片上传卡片结束 -->
+
+
+  <label for="dogBreed">품종 (선택)</label>
+  <input
+    id="dogBreed"
+    type="text"
+    maxlength="60"
+    placeholder="예: 푸들 / 믹스견 / 모름"
+  >
+
+  <label for="dogBirthday">생일 (선택)</label>
+  <input id="dogBirthday" type="date">
+
+  <label for="dogGender">성별 (선택)</label>
+  <select id="dogGender">
+    <option value="">선택 안 함</option>
+    <option value="male">수컷</option>
+    <option value="female">암컷</option>
+    <option value="unknown">모름</option>
+  </select>
+
+  <label for="dogWeight">체중 (kg, 선택)</label>
+  <input
+    id="dogWeight"
+    type="number"
+    min="0.1"
+    max="150"
+    step="0.1"
+    inputmode="decimal"
+    placeholder="예: 5.2"
+  >
+
+  <label for="dogActivityHabits">일상 활동 습관 (선택)</label>
+  <textarea
+    id="dogActivityHabits"
+    maxlength="500"
+    placeholder="예: 아침에 산책하는 것을 좋아함"
+  ></textarea>
+
+  <label for="dogDietHabits">식습관 (선택)</label>
+  <textarea
+    id="dogDietHabits"
+    maxlength="500"
+    placeholder="예: 하루 두 번 사료를 먹음"
+  ></textarea>
+
+  <label for="dogSpecialNotes">특별 주의사항 (선택)</label>
+  <textarea
+    id="dogSpecialNotes"
+    maxlength="500"
+    placeholder="예: 낯선 사람을 조금 무서워함"
+  ></textarea>
+
+  <p id="dogCalculatedAge" class="small-disclaimer">
+    생일을 입력하면 나이가 자동으로 계산됩니다.
+  </p>
+
+  <button class="primary-button" type="submit">
+    프로필 저장
+  </button>
+    </div>
+</details>
+</form>
+
+<p class="small-disclaimer">
+  여러 반려동물 프로필을 관리할 수 있습니다.
+  기본 프로필 정보는 로그인 계정에 동기화되며,
+  사진과 돌봄 기록은 이 기기에 저장됩니다.
+  체중 입력은 건강 진단을 의미하지 않습니다.
+</p>
+<details class="settings-fold">
+  <summary>데이터 백업 · 내보내기 및 복원</summary>
+  <div class="settings-fold-content">
+<div class="backup-section">
+  <h3>데이터 백업</h3>
+  <p class="small-disclaimer">
+  강아지 프로필, 모든 돌봄 기록과 소리 감지 기록을
+  JSON 파일로 내보냅니다. 사진·영상·녹음은 포함되지 않습니다.
+  개인정보가 포함될 수 있으므로 안전한 곳에 보관해 주세요.
+</p>
+
+
+  <button
+    class="secondary-button full-width"
+    id="backupDataButton"
+    type="button"
+  >
+    ↓ 프로필 및 돌봄 기록 백업
+  </button>
+</div>
+<button
+  class="secondary-button full-width"
+  id="restoreDataButton"
+  type="button"
+>
+  ↑ 백업 파일에서 복원
+</button>
+
+<input
+  id="restoreDataFile"
+  type="file"
+  accept=".json,application/json"
+  hidden
+>
+
+<p class="small-disclaimer">
+  복원하면 프로필, 모든 돌봄 기록과 소리 감지 기록이
+  백업 내용으로 교체됩니다.
+  이전 버전 백업에 없는 소리 감지 기록은 현재 내용을 유지합니다.
+  먼저 현재 데이터를 백업해 주세요.
+</p>
+
+  </div>
+</details>
+<hr class="profile-divider">
+<details class="settings-fold">
+  <summary>장치 관리 센터 · 카메라 및 네트워크</summary>
+  <div class="settings-fold-content">
+<!-- PawView 장치 관리 센터 -->
+<div class="device-management">
+  <div class="panel-heading">
+    <div>
+      <h3>장치 관리 센터</h3>
+      <p>카메라와 스마트폰 및 외부 기기의 연결 상태를 관리합니다.</p>
+    </div>
+  </div>
+
+  <!-- 카메라 및 마이크 -->
+  <div class="device-management-group">
+    <h4>영상 및 오디오</h4>
+
+    <div class="device-status-grid">
+      <div class="device-status-item">
+        <div class="device-status-icon">📷</div>
+        <div>
+          <strong>카메라</strong>
+          <small id="managementCameraStatus">상태 확인 중</small>
+        </div>
+        <span class="device-status-indicator" id="managementCameraIndicator"></span>
+      </div>
+
+      <div class="device-status-item">
+        <div class="device-status-icon">🎙️</div>
+        <div>
+          <strong>마이크</strong>
+          <small id="managementMicStatus">상태 확인 중</small>
+        </div>
+        <span class="device-status-indicator" id="managementMicIndicator"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 네트워크 및 스마트 기기 -->
+  <div class="device-management-group">
+    <h4>네트워크 및 연결</h4>
+
+    <div class="device-status-grid">
+      <div class="device-status-item">
+        <div class="device-status-icon">📶</div>
+        <div>
+          <strong>Wi-Fi</strong>
+          <small id="managementWifiStatus">연동 전</small>
+        </div>
+        <span class="device-status-indicator" id="managementWifiIndicator"></span>
+      </div>
+
+      <div class="device-status-item">
+        <div class="device-status-icon">🔌</div>
+        <div>
+          <strong>스마트 기기</strong>
+          <small id="managementSmartStatus">연결된 기기 없음</small>
+        </div>
+        <span class="device-status-indicator" id="managementSmartIndicator"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스마트폰 상태 -->
+<div class="device-management-group">
+  <h4>스마트폰 상태</h4>
+
+  <div class="device-status-grid">
+    <div class="device-status-item">
+      <div class="device-status-icon">🔋</div>
+      <div>
+        <strong>배터리</strong>
+        <small id="managementBatteryStatus">지원 여부 확인 필요</small>
+      </div>
+    </div>
+
+    <div class="device-status-item">
+      <div class="device-status-icon">🌡️</div>
+      <div>
+        <strong>기기 온도</strong>
+        <small id="managementTemperatureStatus">
+          Android 온도 센서 연동 전
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- 장치 오류 및 재연결 -->
+  <div class="device-management-group">
+    <h4>장치 오류 및 연결 관리</h4>
+
+    <div class="device-error-box" id="managementDeviceError">
+      <strong>장치 상태 확인 필요</strong>
+      <p>실제 장치 상태 연동 후 연결 오류와 이상 상태를 표시합니다.</p>
+    </div>
+
+<button
+  type="button"
+  class="secondary-button full-width"
+  id="managementReconnectButton"
+>
+  ↻ 장치 다시 연결
+</button>
+
+    <p class="small-disclaimer">
+      일부 기능은 Android 시스템 권한과 외부 스마트 기기 연동이 필요합니다.
+    </p>
+  </div>
+</div>
+<!-- PawView 장치 관리 센터 끝 -->
+  </div>
+</details>
+          <div class="device-card"><div class="device-symbol">📷</div><div class="device-info">
+    <strong>가정용 반려동물 카메라</strong><small id="deviceStatus">상태: 시뮬레이션 온라인 · 실제 기기 미연결</small></div><span class="device-tag">DEMO</span></div>
+    <details class="settings-fold">
+  <summary>기타 설정 · 시뮬레이션 및 알림</summary>
+  <div class="settings-fold-content">
+          <div class="setting-row"><div><strong>카메라 시뮬레이션 상태</strong><small>켜면 시뮬레이션 기기가 온라인으로 표시됩니다.</small></div><label class="switch"><input id="deviceToggle" type="checkbox" checked><span></span></label></div>
+          <div class="setting-row"><div><strong>소리 알림</strong><small>페이지 내 소리 알림 상태를 설정합니다.</small></div><label class="switch"><input id="settingsSoundToggle" type="checkbox"><span></span></label></div>
+          <div class="setting-row"><div><strong>건강 요약</strong><small>건강 리포트의 통계 표시를 설정합니다.</small></div><label class="switch"><input id="settingsSummaryToggle" type="checkbox" checked><span></span></label></div>
+          <div class="settings-note"><strong>다음 단계에서 연결할 수 있는 기능</strong><p>실제 카메라 영상 스트림, 목걸이형 GPS, 활동 센서, 데이터베이스, 스마트폰 푸시 알림 서비스</p></div>
+       
+         </div>
+</details>
+          <button
+  type="button"
+  id="logoutButton"
+  class="secondary-button full-width"
+>
+  로그아웃
+</button>
+        </article>
+      </section>
+
+
+<footer class="app-footer">
+  <details class="app-info-details">
+    <summary>ⓘ PawView 서비스 및 데이터 안내</summary>
+    <p>
+      PawView 프로토타입입니다.
+      반려동물 기본 프로필은 로그인 계정에 동기화됩니다.
+      돌봄 기록과 사진은 이 기기에 저장됩니다.
+      카메라는 이 기기의 미리보기이며,
+      위치는 시뮬레이션입니다.
+      자동 활동·건강 분석 및 원격 알림은
+      아직 제공되지 않습니다.
+    </p>
+  </details>
+</footer>
+
+
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+<script src="community-config.js" defer></script>
+<script src="community.js" defer></script>
+
+ <script src="main.js" defer></script>
+ <script src="./raspberry-pi-camera.js" defer></script>
+ <script src="./camera-mode-switch.js" defer></script>
+<script src="sound-monitor.js" defer></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"
+  defer
+></script>
+<script src="sound-model.js" defer></script>
+<script src="sound-analysis.js" defer></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"
+  defer
+></script>
+<script src="dog-motion.js" defer></script>
+<script src="dog-vision.js" defer></script>
+<script src="sound-vision-link.js" defer></script>
+<script src="analysis-events.js" defer></script>
+<script
+  type="module"
+  src="./android-notifications.js"
+></script>
+<script src="./media-gallery.bundle.js"></script>
+<script src="./history-center.js"></script>
+<script type="module" src="./firebase-init.js"></script>
+<script type="module" src="./firebase-pets.js"></script>
+<script type="module" src="./firebase-auth.js"></script>
+  
+<nav class="mobile-bottom-nav" aria-label="하단 메뉴">
+  <button
+    class="mobile-nav-item active"
+    data-page="monitor"
+    type="button"
+  >
+    <span>⌂</span>
+    <small>홈</small>
+  </button>
+
+  <button
+    class="mobile-nav-item"
+    data-page="report"
+    type="button"
+  >
+    <span>▤</span>
+    <small>리포트</small>
+  </button>
+
+  <button
+    class="mobile-nav-item"
+    data-page="community"
+    type="button"
+  >
+    <span>☏</span>
+    <small>커뮤니티</small>
+  </button>
+
+  <button
+    class="mobile-nav-item"
+    data-page="location"
+    type="button"
+  >
+    <span>♡</span>
+    <small>반려동물</small>
+  </button>
+
+  <button
+    class="mobile-nav-item"
+    data-page="settings"
+    type="button"
+  >
+    <span>⚙</span>
+    <small>설정</small>
+  </button>
+</nav>
+
+<script>
+  // 每次打开页面只尝试一次，不反复请求麦克风权限
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.hidden) return;
+
+    const startButton = document.getElementById("startMicButton");
+
+    if (!startButton || startButton.disabled) return;
+
+    // 使用现有麦克风逻辑：
+    // 权限处理、等待模型、声音分析和后台关闭规则保持不变
+    startButton.click();
+  }, { once: true });
+</script>
+</body>
+</html>

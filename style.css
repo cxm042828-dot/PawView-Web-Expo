@@ -1,0 +1,5881 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --green: #20a765;
+  --green-dark: #14834d;
+  --green-light: #e9f8ef;
+  --ink: #1e293b;
+  --muted: #778397;
+  --line: #e8edf2;
+  --surface: #ffffff;
+  --bg: #f5f8fb;
+  --shadow: 0 8px 26px rgba(30, 50, 70, .045);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.app-shell {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* 左侧导航 */
+
+.sidebar {
+  width: 245px;
+  flex: 0 0 245px;
+  display: flex;
+  flex-direction: column;
+  padding: 27px 17px 20px;
+  background: #fff;
+  border-right: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 10px 30px;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: var(--green-light);
+  font-size: 23px;
+}
+
+.brand strong {
+  display: block;
+  font-size: 18px;
+  letter-spacing: -.4px;
+}
+
+.brand small,
+.pet-meta small {
+  display: block;
+  margin-top: 3px;
+  color: #9aa4b2;
+  font-size: 11px;
+}
+
+.pet-switcher {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 10px;
+  background: #f7faf8;
+  border: 1px solid #eef4ef;
+  border-radius: 15px;
+}
+
+.pet-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: #fff;
+  font-size: 23px;
+}
+
+.pet-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.pet-meta strong {
+  font-size: 13px;
+}
+
+.pet-switcher select {
+  position: absolute;
+  right: 8px;
+  bottom: 7px;
+  width: 24px;
+  opacity: .01;
+  cursor: pointer;
+}
+
+.pet-switcher:after {
+  content: "⌄";
+  position: absolute;
+  top: 22px;
+  right: 13px;
+  color: #9ba7b4;
+  pointer-events: none;
+}
+
+.nav-menu {
+  display: grid;
+  gap: 7px;
+  margin-top: 29px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: #7c8797;
+  text-align: left;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+
+.nav-item span {
+  width: 20px;
+  flex-shrink: 0;
+  font-size: 19px;
+  text-align: center;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.nav-item.active {
+  font-weight: 700;
+}
+
+.sidebar-bottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 18px 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.connection-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #35bf79;
+  box-shadow: 0 0 0 4px #e7f8ee;
+}
+
+.sidebar-bottom strong,
+.sidebar-bottom small {
+  display: block;
+}
+
+.sidebar-bottom strong {
+  font-size: 12px;
+}
+
+.sidebar-bottom small {
+  margin-top: 3px;
+  color: #98a3b2;
+  font-size: 10px;
+}
+
+/* 主页面与顶部 */
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 28px clamp(20px, 3.2vw, 48px) 20px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 29px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #98a3b2;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: clamp(22px, 2vw, 27px);
+  letter-spacing: -.8px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  padding: 9px 12px;
+  border-radius: 99px;
+  background: #eaf8ef;
+  color: #16834d;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pulse,
+.live-label span {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #27b76e;
+}
+
+.icon-button {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  font-size: 19px;
+  cursor: pointer;
+}
+
+.icon-button i {
+  position: absolute;
+  top: -4px;
+  right: -3px;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #f06d6d;
+  color: #fff;
+  font-size: 9px;
+  font-style: normal;
+}
+
+.user-avatar {
+  display: grid;
+  place-items: center;
+  width: 37px;
+  height: 37px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e7edf7;
+  color: #52647c;
+  font-weight: 700;
+}
+
+.page {
+  display: none;
+  animation: fadeIn .25s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: .4; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.welcome-row h2 {
+  margin: 0 0 6px;
+  font-size: 19px;
+  letter-spacing: -.4px;
+}
+
+.welcome-row p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.date-pill {
+  flex-shrink: 0;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+  color: #758194;
+  font-size: 11px;
+}
+
+/* 数据卡片 */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 19px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.stat-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 20px;
+}
+
+.stat-icon.green { background: #e7f8ee; color: #20a765; }
+.stat-icon.orange { background: #fff3e4; color: #f1a14a; }
+.stat-icon.blue { background: #eaf2ff; color: #6092df; }
+
+.stat-card p {
+  margin: 0 0 8px;
+  color: #7e8999;
+  font-size: 11px;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -.8px;
+  overflow-wrap: anywhere;
+}
+
+.stat-card strong small {
+  color: #8995a4;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.stat-note {
+  display: block;
+  margin-top: 9px;
+  color: #98a2b0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.stat-note.positive { color: #22a366; }
+.status-text { font-size: 19px !important; letter-spacing: 0 !important; }
+
+/* 面板布局 */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 1fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.panel {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.panel-heading h3 {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: -.3px;
+}
+
+.panel-heading p {
+  margin: 5px 0 0;
+  color: #98a2b0;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.live-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #20a765;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .6px;
+  white-space: nowrap;
+}
+
+/* 摄像头画面 */
+
+.camera-scene {
+  position: relative;
+  width: 100%;
+  height: clamp(220px, 27vw, 330px);
+  overflow: hidden;
+  border-radius: 13px;
+  background: linear-gradient(
+    180deg,
+    #e7f0e8 0%,
+    #f4e9d9 64%,
+    #d8c1a4 64%,
+    #c7ad8d 100%
+  );
+}
+
+.camera-scene #cameraVideo {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  background: #17231d;
+}
+
+.camera-scene.camera-active #cameraVideo {
+  display: block;
+}
+
+.camera-scene.camera-active .scene-window,
+.camera-scene.camera-active .scene-shelf,
+.camera-scene.camera-active .scene-plant,
+.camera-scene.camera-active .scene-rug,
+.camera-scene.camera-active .scene-pet,
+.camera-scene.camera-active .scene-toy {
+  display: none;
+}
+
+.camera-scene.camera-active .scene-time,
+.camera-scene.camera-active .scene-caption {
+  z-index: 3;
+}
+
+.camera-placeholder {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 9px;
+  padding: 24px;
+  background: linear-gradient(135deg, #eef8f1, #e8f0eb);
+  color: #47745a;
+  text-align: center;
+}
+
+.camera-placeholder.visible {
+  display: flex;
+}
+
+.placeholder-icon { font-size: 34px; }
+.camera-placeholder strong { font-size: 14px; }
+
+.camera-placeholder span {
+  max-width: 300px;
+  color: #7a9583;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.scene-window {
+  position: absolute;
+  top: 22px;
+  left: 25px;
+  width: 105px;
+  height: 88px;
+  border: 8px solid #fffaf0;
+  background: #cde9e8;
+  box-shadow: 0 3px 8px #7d8d7a22;
+}
+
+.sun {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f8d78c;
+}
+
+.window-pane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 44px;
+  width: 4px;
+  background: #fffaf0;
+}
+
+.scene-shelf {
+  position: absolute;
+  top: 62px;
+  right: 0;
+  width: 130px;
+  height: 13px;
+  border-radius: 3px 0 0 3px;
+  background: #b38b62;
+  box-shadow: 0 5px 0 #97724e;
+}
+
+.scene-plant {
+  position: absolute;
+  top: 13px;
+  right: 30px;
+  font-size: 34px;
+}
+
+.scene-rug {
+  position: absolute;
+  right: 14%;
+  bottom: -55px;
+  left: 14%;
+  height: 140px;
+  border: 2px solid #dfc8a6;
+  border-radius: 50%;
+  background: #ead9bf;
+}
+
+.scene-pet {
+  position: absolute;
+  top: 44%;
+  left: 46%;
+  transform: translate(-50%, -25%);
+  font-size: clamp(56px, 7vw, 76px);
+  filter: drop-shadow(0 10px 5px #5e493322);
+  transition: transform .7s;
+}
+
+.scene-toy {
+  position: absolute;
+  right: 27%;
+  bottom: 51px;
+  font-size: 25px;
+}
+
+.scene-time {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #172b24a8;
+  color: #fff;
+  font-size: 9px;
+  letter-spacing: .6px;
+}
+
+.scene-caption {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: #172b24bd;
+  color: #fff;
+  font-size: 10px;
+}
+
+.camera-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 15px;
+  row-gap: 9px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 40px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+
+.primary-button {
+  background: var(--green);
+  color: #fff;
+}
+
+.primary-button:hover {
+  background: var(--green-dark);
+}
+
+.secondary-button {
+  border: 1px solid #e9efeb;
+  background: #f4f7f5;
+  color: #596779;
+}
+
+.secondary-button:hover { background: #eaf5ee; }
+
+.camera-controls button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.camera-hint {
+  margin-left: auto;
+  color: #9aa4b2;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* 快捷功能 */
+
+.quick-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border: 0;
+  border-bottom: 1px solid #f0f2f5;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.quick-action:last-of-type { border-bottom: 0; }
+
+.quick-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 19px;
+}
+
+.quick-icon.mint { background: #e9f8ef; color: #24a86a; }
+.quick-icon.peach { background: #fff1e7; color: #e99a5d; }
+.quick-icon.lavender { background: #f0edff; color: #8a7ae0; }
+
+.quick-action > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-action strong {
+  display: block;
+  font-size: 12px;
+}
+
+.quick-action small {
+  display: block;
+  margin-top: 4px;
+  color: #9aa4b2;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.quick-action b {
+  color: #b2bbc5;
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.tip-box {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding: 13px;
+  border-radius: 11px;
+  background: #f3faf5;
+  color: #258956;
+}
+
+.tip-box > span { font-size: 18px; }
+.tip-box strong { font-size: 11px; }
+
+.tip-box p {
+  margin: 5px 0 0;
+  color: #789485;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* 活动图表与记录 */
+
+.activity-panel { margin-bottom: 19px; }
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.activity-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 12px;
+  height: 115px;
+  padding: 5px 7px 0;
+  border-bottom: 1px solid #e8edf2;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    #f0f3f6 28px
+  );
+}
+
+.chart-column {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  min-width: 0;
+}
+
+.chart-bar {
+  width: min(32px, 75%);
+  min-height: 5px;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(180deg, #6bd69a, #27ae6d);
+  transition: height .4s;
+}
+
+.chart-column span {
+  color: #9aa4b2;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 13px;
+  color: #8b97a6;
+  font-size: 10px;
+}
+
+.chart-legend span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2bb673;
+}
+
+.weekly-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(8px, 3vw, 32px);
+  height: 210px;
+  padding: 14px 10px 0;
+  border-bottom: 1px solid #e9eef2;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 44px,
+    #f1f4f6 45px
+  );
+}
+
+.weekly-column {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  min-width: 0;
+}
+
+.weekly-column strong {
+  color: #718093;
+  font-size: 10px;
+}
+
+.weekly-bar {
+  width: min(42px, 80%);
+  border-radius: 7px 7px 2px 2px;
+  background: linear-gradient(180deg, #78dba4, #22a765);
+}
+
+.weekly-column span {
+  color: #9aa4b2;
+  font-size: 10px;
+}
+
+.records-panel { margin-top: 18px; }
+.record-list { display: grid; }
+
+.record-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.record-item:last-child { border-bottom: 0; }
+
+.record-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: #f0f8f3;
+  font-size: 17px;
+}
+
+.record-copy { flex: 1; min-width: 0; }
+.record-copy strong { display: block; font-size: 12px; }
+
+.record-copy small {
+  display: block;
+  margin-top: 4px;
+  color: #98a2b0;
+  font-size: 10px;
+}
+
+.record-time {
+  color: #9aa4b2;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* 位置与安全页面 */
+
+.location-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+  gap: 18px;
+}
+
+.safe-pill {
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: #e9f8ef;
+  color: #198c52;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.fake-map {
+  position: relative;
+  height: 335px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f1f4ec;
+}
+
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#dbe3d3 1px, transparent 1px),
+    linear-gradient(90deg, #dbe3d3 1px, transparent 1px);
+  background-size: 35px 35px;
+  transform: rotate(-7deg) scale(1.15);
+}
+
+.safe-zone {
+  position: absolute;
+  top: 15%;
+  left: 23%;
+  width: 54%;
+  height: 67%;
+  border: 2px dashed #54bd81;
+  border-radius: 45% 42% 50% 35%;
+  background: #7ed69c2b;
+  transform: rotate(12deg);
+}
+
+.map-home {
+  position: absolute;
+  top: 40%;
+  left: 43%;
+  display: grid;
+  place-items: center;
+  width: 47px;
+  height: 47px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 12px #354b3515;
+  color: #5e9c72;
+  font-size: 27px;
+}
+
+.map-home small {
+  position: absolute;
+  top: 50px;
+  color: #738274;
+  font-size: 9px;
+}
+
+.map-pet {
+  position: absolute;
+  top: 60%;
+  left: 61%;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 12px #354b351c;
+  font-size: 21px;
+}
+
+.map-label {
+  position: absolute;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #ffffffd9;
+  color: #809080;
+  font-size: 10px;
+}
+
+.label-one { top: 27%; left: 15%; }
+.label-two { right: 12%; bottom: 22%; }
+
+.map-caption {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: #ffffffc9;
+  color: #7c8978;
+  font-size: 9px;
+}
+
+.map-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  padding-top: 14px;
+  color: #8994a3;
+  font-size: 10px;
+}
+
+.legend-dot,
+.legend-pet {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+.legend-dot { background: #70cb91; }
+.legend-pet { border: 2px solid #69b77f; background: #fff; }
+
+/* 设置开关 */
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 17px 0;
+  border-bottom: 1px solid #eff2f4;
+}
+
+.setting-row strong {
+  display: block;
+  font-size: 12px;
+}
+
+.setting-row small {
+  display: block;
+  margin-top: 5px;
+  color: #98a2b0;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.switch {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.switch span {
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  background: #dce2e8;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.switch span:before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px #0002;
+  transition: transform .2s;
+}
+
+.switch input:checked + span { background: #36b875; }
+.switch input:checked + span:before { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 3px; }
+
+.full-width {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.small-disclaimer {
+  margin: 13px 0 0;
+  color: #9ba5b2;
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+/* 设备设置页面 */
+
+
+/* PawView 설정 및 반려동물 프로필 페이지 */
+.settings-page-panel {
+  width: 100%;
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 26px;
+  box-sizing: border-box;
+  border: 1px solid #e8eee9;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 8px 28px rgba(35, 70, 48, 0.045);
+}
+
+/* 프로필 페이지 제목 */
+.settings-page-panel > .panel-heading {
+  margin-bottom: 22px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #edf2ee;
+}
+
+.settings-page-panel > .panel-heading h3 {
+  font-size: 19px;
+  font-weight: 800;
+  color: #263b30;
+}
+
+.settings-page-panel > .panel-heading p {
+  margin-top: 6px;
+  color: #849187;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .settings-page-panel {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .settings-page-panel > .panel-heading {
+    margin-bottom: 17px;
+  }
+
+  .settings-page-panel > .panel-heading h3 {
+    font-size: 16px;
+  }
+}
+
+
+.device-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 10px;
+  padding: 15px;
+  border: 1px solid #edf1ee;
+  border-radius: 13px;
+  background: #f8faf9;
+}
+
+.device-symbol {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: #e6f7ec;
+  font-size: 22px;
+}
+
+.device-info { flex: 1; min-width: 0; }
+.device-info strong { display: block; font-size: 13px; }
+
+.device-info small {
+  display: block;
+  margin-top: 5px;
+  color: #98a2b0;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.device-tag {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #e8f7ed;
+  color: #23955b;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.settings-note {
+  margin-top: 21px;
+  padding: 15px;
+  border-radius: 11px;
+  background: #f5faf6;
+  color: #39835b;
+  font-size: 12px;
+}
+
+.settings-note p {
+  margin: 7px 0 0;
+  color: #718f7d;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.app-footer {
+  padding: 22px 0 4px;
+  color: #b0b8c2;
+  font-size: 10px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.toast {
+  position: fixed;
+  bottom: calc(25px + env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 10001;
+  max-width: calc(100vw - 32px);
+  padding: 12px 18px;
+  border-radius: 11px;
+  background: #26362d;
+  color: #fff;
+  box-shadow: 0 10px 35px #172b2430;
+  font-size: 12px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 15px);
+  transition: opacity .25s, transform .25s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* 手机底部导航：桌面默认隐藏 */
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+/* 中等尺寸设备 */
+
+@media (max-width: 1100px) {
+  .sidebar {
+    width: 215px;
+    flex-basis: 215px;
+  }
+
+  .content-grid,
+  .location-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .camera-scene { height: 300px; }
+
+  .quick-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+  }
+
+  .quick-panel .panel-heading,
+  .quick-panel .tip-box {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 手机和平板竖屏 */
+
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  .app-shell {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  .sidebar {
+    display: none !important;
+  }
+
+  .main-content {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 16px 14px 20px;
+  }
+
+  .topbar {
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .topbar h1 { font-size: 22px; }
+
+  .topbar-right {
+    gap: 7px;
+  }
+
+  .demo-badge {
+    max-width: 130px;
+    overflow: hidden;
+    padding: 8px 9px;
+    font-size: 9px;
+    text-overflow: ellipsis;
+  }
+
+  .user-avatar { display: none; }
+
+  .welcome-row {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .welcome-row h2 { font-size: 17px; }
+  .welcome-row p { font-size: 11px; }
+
+  .date-pill {
+    max-width: 44%;
+    padding: 7px 8px;
+    font-size: 9px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .stats-grid,
+  .content-grid,
+  .location-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .stats-grid { margin-bottom: 14px; }
+
+  .stat-card { padding: 14px; }
+  .stat-card strong { font-size: 22px; }
+  .stat-icon { width: 36px; height: 36px; }
+
+  .panel {
+    padding: 14px;
+    margin-bottom: 14px;
+    border-radius: 15px;
+  }
+
+  .panel-heading {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .panel-heading h3 { font-size: 14px; }
+  .panel-heading p { font-size: 10px; }
+
+  .camera-scene {
+    height: clamp(220px, 58vw, 350px);
+  }
+
+  .camera-controls {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .camera-controls button {
+    flex: 1 1 140px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px;
+    line-height: 1.5;
+  }
+
+  .camera-hint {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .quick-panel { display: flex; }
+
+  .quick-panel .panel-heading,
+  .quick-panel .tip-box {
+    grid-column: auto;
+  }
+
+  .fake-map { height: clamp(250px, 72vw, 335px); }
+  .weekly-chart { height: 175px; }
+  .activity-chart { gap: 5px; }
+  .report-stats { grid-template-columns: minmax(0, 1fr); }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+    padding: 7px 6px calc(7px + env(safe-area-inset-bottom));
+    border-top: 1px solid #e5ece7;
+    background: rgba(255, 255, 255, .97);
+    box-shadow: 0 -4px 18px rgba(30, 50, 70, .045);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    min-height: 48px;
+    padding: 5px 2px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #829087;
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .mobile-nav-item span { font-size: 21px; }
+
+  .mobile-nav-item small {
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .mobile-nav-item.active {
+    background: #edf7ef;
+    color: #287449;
+  }
+
+  .toast {
+    bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  button,
+  input,
+  select {
+    max-width: 100%;
+  }
+
+  .app-footer { padding-bottom: 10px; }
+}
+
+/* 小屏手机 */
+
+@media (max-width: 380px) {
+  .main-content { padding-right: 10px; padding-left: 10px; }
+
+  .topbar h1 { font-size: 19px; }
+
+  .topbar-right { gap: 5px; }
+
+  .demo-badge {
+    max-width: 105px;
+    font-size: 8px;
+  }
+
+  .icon-button {
+    width: 32px;
+    height: 34px;
+  }
+
+  .welcome-row h2 { font-size: 15px; }
+
+  .panel { padding: 12px; }
+
+  .camera-controls button {
+    flex-basis: 100%;
+    width: 100%;
+  }
+
+  .scene-window {
+    left: 14px;
+    transform: scale(.85);
+    transform-origin: top left;
+  }
+
+  .scene-plant { right: 15px; }
+
+  .mobile-nav-item small { font-size: 9px; }
+}
+
+/* 横屏手机：尽量利用有限的垂直空间 */
+
+@media (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
+  .camera-scene {
+    height: 55vh;
+    min-height: 180px;
+    max-height: 300px;
+  }
+
+  .mobile-bottom-nav {
+    padding-top: 4px;
+    padding-bottom: calc(4px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-nav-item { min-height: 40px; }
+}
+
+/* 모바일 하단 내비게이션 */
+
+/* PawView 모바일 UI 개선 */
+
+:root {
+  --green: #20a765;
+  --green-dark: #16864f;
+  --green-light: #e9f8ef;
+  --bg: #f4f8f5;
+  --line: #e6eee8;
+  --shadow: 0 6px 22px rgba(35, 65, 45, 0.055);
+}
+
+/* 按钮统一交互效果 */
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.nav-item,
+.mobile-nav-item,
+.primary-button,
+.secondary-button,
+.icon-button,
+.quick-action {
+  transition: background-color 0.2s ease,
+              color 0.2s ease,
+              transform 0.15s ease,
+              box-shadow 0.2s ease;
+}
+
+/* 页面布局更稳定 */
+.app-shell,
+.main-content,
+.page,
+.panel,
+.stat-card {
+  min-width: 0;
+}
+
+.panel,
+.stat-card {
+  box-shadow: var(--shadow);
+}
+
+/* 手机和平板 */
+@media (max-width: 768px) {
+  html {
+    scroll-padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  }
+
+  body {
+    overflow-x: hidden;
+    background: #f4f8f5;
+  }
+
+  .app-shell {
+    display: block;
+    width: 100%;
+    padding-bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+
+  .main-content {
+    width: 100%;
+    padding: 15px 13px 24px;
+  }
+
+  .topbar {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .topbar h1 {
+    font-size: clamp(18px, 5vw, 23px);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .topbar-right {
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  .demo-badge {
+    max-width: 125px;
+    white-space: normal;
+    line-height: 1.4;
+  }
+
+  .welcome-row {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .welcome-row > div {
+    min-width: 0;
+  }
+
+  .welcome-row h2 {
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  .welcome-row p {
+    overflow-wrap: anywhere;
+  }
+
+  .stats-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .stat-card {
+    align-items: center;
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  .content-grid,
+  .location-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .panel {
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+  }
+
+  .camera-scene {
+    width: 100%;
+    height: clamp(220px, 62vw, 360px);
+    border-radius: 13px;
+  }
+
+  .camera-scene #cameraVideo {
+    object-fit: cover;
+  }
+
+  .camera-controls {
+    gap: 8px;
+  }
+
+  .camera-controls button {
+    min-height: 44px;
+    border-radius: 11px;
+    font-size: 12px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    min-height: 44px;
+    border-radius: 11px;
+  }
+
+  .quick-action {
+    min-height: 62px;
+  }
+
+  .fake-map {
+    height: clamp(250px, 72vw, 335px);
+  }
+
+  .weekly-chart {
+    gap: 8px;
+    padding-right: 3px;
+    padding-left: 3px;
+  }
+
+  /* 固定在屏幕底部的手机导航 */
+  .mobile-bottom-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 4px;
+
+    width: 100%;
+    margin: 0;
+    padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+
+    background: rgba(255, 255, 255, 0.97);
+    border-top: 1px solid #e4ece6;
+    box-shadow: 0 -5px 22px rgba(32, 65, 43, 0.08);
+
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  .mobile-bottom-nav .mobile-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+    padding: 6px 2px;
+
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #7c8b80;
+
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-bottom-nav .mobile-nav-item span {
+    font-size: 21px;
+    line-height: 1.2;
+  }
+
+  .mobile-bottom-nav .mobile-nav-item small {
+    font-size: clamp(9px, 2.7vw, 11px);
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  .mobile-bottom-nav .mobile-nav-item.active {
+    background: #eaf7ee;
+    color: #16834d;
+  }
+
+  .mobile-bottom-nav .mobile-nav-item.active small {
+    font-weight: 800;
+  }
+
+  .mobile-bottom-nav .mobile-nav-item:active {
+    background: #ddf1e3;
+    transform: scale(0.96);
+  }
+
+  .toast {
+    bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .app-footer {
+    padding-bottom: 10px;
+  }
+}
+
+/* 小屏手机 */
+@media (max-width: 380px) {
+  .main-content {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .topbar h1 {
+    font-size: 18px;
+  }
+
+  .demo-badge {
+    max-width: 100px;
+    padding: 7px;
+    font-size: 9px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .mobile-bottom-nav {
+    gap: 2px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .mobile-bottom-nav .mobile-nav-item small {
+    font-size: 9px;
+  }
+}
+
+/* 横屏手机 */
+@media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+  .app-shell {
+    padding-bottom: 65px;
+  }
+
+  .camera-scene {
+    height: 55vh;
+    min-height: 180px;
+    max-height: 300px;
+  }
+
+  .mobile-bottom-nav {
+    padding-top: 3px;
+    padding-bottom: calc(3px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-bottom-nav .mobile-nav-item {
+    min-height: 42px;
+  }
+
+  .mobile-bottom-nav .mobile-nav-item span {
+    font-size: 18px;
+  }
+}
+
+/* PawView 모바일 홈 화면 개선 */
+@media (max-width: 768px) {
+  /* 顶部标题区域 */
+  .topbar {
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .topbar h1 {
+    font-size: 21px;
+    line-height: 1.4;
+  }
+
+  /* 问候语减少占用空间 */
+  .welcome-row {
+    margin-bottom: 15px;
+  }
+
+  .welcome-row h2 {
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .welcome-row p {
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  /* 数据卡片更紧凑 */
+  .stats-grid {
+    gap: 9px;
+    margin-bottom: 14px;
+  }
+
+  .stat-card {
+    min-height: 96px;
+    padding: 13px;
+    gap: 12px;
+  }
+
+  .stat-card p {
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .stat-card strong {
+    font-size: 23px;
+    line-height: 1.35;
+  }
+
+  .stat-note {
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* 摄像头卡片 */
+  .content-grid {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .panel-heading {
+    margin-bottom: 13px;
+  }
+
+  .camera-scene {
+    width: 100%;
+    height: clamp(230px, 65vw, 340px);
+    overflow: hidden;
+    border-radius: 13px;
+  }
+
+  /* 保持真实摄像头画面比例填满区域 */
+  .camera-scene #cameraVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .camera-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .camera-controls button {
+    flex: 1 1 135px;
+    min-height: 44px;
+    font-size: 12px;
+  }
+
+  .camera-hint {
+    flex-basis: 100%;
+    margin-left: 0;
+    line-height: 1.6;
+  }
+
+  /* 底部导航与页面内容留出距离 */
+  .app-shell {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-bottom-nav {
+    padding-bottom: calc(9px + env(safe-area-inset-bottom));
+  }
+
+  .toast {
+    bottom: calc(90px + env(safe-area-inset-bottom));
+  }
+}
+
+/* 超小屏手机 */
+@media (max-width: 380px) {
+  .topbar h1 {
+    font-size: 19px;
+  }
+
+  .stat-card {
+    padding: 12px;
+  }
+
+  .camera-scene {
+    height: 62vw;
+    min-height: 210px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+}
+/* 狗狗手动照护记录 */
+.care-panel {
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.care-form {
+  display: grid;
+  gap: 9px;
+}
+
+.care-form label {
+  margin-top: 6px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.care-form input,
+.care-form select,
+.care-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f8fbf9;
+  color: var(--ink);
+  font: inherit;
+}
+
+.care-form textarea {
+  resize: vertical;
+}
+
+.care-form :focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.care-form button {
+  min-height: 46px;
+  margin-top: 6px;
+}
+
+.care-records {
+  display: grid;
+  margin-top: 16px;
+}
+
+.care-record {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.care-record-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.care-record-copy strong,
+.care-record-copy time {
+  display: block;
+}
+
+.care-record-copy time {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.care-record-copy p {
+  margin: 7px 0 0;
+  color: var(--ink);
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.care-delete {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: #a63e3e;
+  cursor: pointer;
+}
+
+.care-empty {
+  padding: 16px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+/* 狗狗资料与设备设置之间的分隔 */
+.profile-divider {
+  margin: 26px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+/* 首页：狗狗资料卡 */
+#page-monitor .home-pet-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+#page-monitor .home-pet-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+#page-monitor .home-pet-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: var(--green-light);
+  font-size: 34px;
+}
+
+#page-monitor .home-pet-details {
+  min-width: 0;
+}
+
+#page-monitor .home-pet-details h2 {
+  margin: 0 0 5px;
+  font-size: 23px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+#page-monitor .home-pet-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+#page-monitor .home-pet-card .date-pill {
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  #page-monitor .home-pet-card {
+    padding: 14px;
+    gap: 8px;
+  }
+
+  #page-monitor .home-pet-info {
+    gap: 10px;
+  }
+
+  #page-monitor .home-pet-avatar {
+    flex-basis: 48px;
+    width: 48px;
+    height: 48px;
+    font-size: 29px;
+  }
+
+  #page-monitor .home-pet-details h2 {
+    font-size: 20px;
+  }
+}
+/* 首页摘要与最新检测提醒 */
+#page-monitor .home-summary {
+  margin-bottom: 16px;
+}
+
+#page-monitor .home-latest-panel {
+  margin-bottom: 18px;
+}
+
+#page-monitor .home-latest-panel .panel-heading {
+  gap: 12px;
+}
+
+#page-monitor #homeLatestMessage {
+  margin: 0;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+#page-monitor #homeLatestTime {
+  font-size: 12px;
+}
+
+#page-monitor .home-summary .stat-card > div:last-child {
+  min-width: 0;
+}
+
+#page-monitor .home-summary .stat-note {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  #page-monitor .home-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #page-monitor .home-summary .stat-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+/* 首页顺序：资料 → 摄像头 → 今日摘要 → 最新提醒 */
+#page-monitor.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 让摄像头和快速操作分别参与首页排序 */
+#page-monitor > .content-grid {
+  display: contents;
+}
+
+#page-monitor > .home-pet-card {
+  order: 1;
+}
+
+#page-monitor > .content-grid > .camera-panel {
+  order: 2;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 18px;
+}
+
+#page-monitor > .home-summary {
+  order: 3;
+}
+
+#page-monitor > .home-latest-panel {
+  order: 4;
+}
+
+#page-monitor > .content-grid > .quick-panel {
+  order: 5;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 18px;
+}
+
+#page-monitor > .care-panel {
+  order: 6;
+}
+
+/* 保持摄像头控制按钮在小屏幕上自动换行 */
+#page-monitor .camera-panel > .camera-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#page-monitor .camera-panel > .camera-controls .camera-hint {
+  flex-basis: 100%;
+}
+/* 首页顺序：今日摘要 → 狗狗资料 → 摄像头 → 最新提醒 */
+#page-monitor > .home-summary {
+  order: 1;
+}
+
+#page-monitor > .home-pet-card {
+  order: 2;
+}
+
+#page-monitor > .content-grid > .camera-panel {
+  order: 3;
+}
+
+#page-monitor > .home-latest-panel {
+  order: 4;
+}
+/* 首页额外功能默认收起 */
+#page-monitor > .home-more-section {
+  order: 5;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 18px;
+}
+
+#page-monitor .home-more-section > summary {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#page-monitor .home-more-section > summary:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+#page-monitor .home-more-section[open] > summary {
+  margin-bottom: 14px;
+}
+
+#page-monitor .home-more-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#page-monitor .home-more-body > .panel {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+#recordCameraStatus {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#recordCameraButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* 报告页：概况、来源说明和无数据状态 */
+#page-report .report-source-panel,
+#page-report .report-trend-panel,
+#page-report .report-intake-panel {
+  margin-bottom: 18px;
+}
+
+#page-report .report-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+#page-report .stat-card,
+#page-report .stat-card > div:last-child {
+  min-width: 0;
+}
+
+#page-report .stat-note {
+  display: block;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+#page-report .report-empty,
+#page-report #weeklyChart {
+  display: block;
+  height: auto;
+  min-height: 88px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f4f7f5;
+  color: #52645b;
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+#page-report .report-empty {
+  margin: 0;
+}
+
+#page-report .report-source-panel .small-disclaimer {
+  margin: 0;
+  line-height: 1.8;
+}
+
+@media (max-width: 480px) {
+  #page-report .report-stats {
+    grid-template-columns: 1fr;
+  }
+}
+/* 报告页：真实手动饮食记录 */
+#page-report .report-intake-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+#page-report .report-intake-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#page-report .report-intake-table caption {
+  padding: 8px 0 12px;
+  text-align: left;
+  color: #52645b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#page-report .report-intake-table th,
+#page-report .report-intake-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e4ece8;
+  text-align: left;
+  white-space: nowrap;
+}
+
+#page-report .report-intake-table thead th {
+  background: #f4f7f5;
+  color: #34483e;
+  font-weight: 600;
+}
+
+#page-report .report-intake-table tbody th {
+  font-weight: 400;
+}
+/* 饮食记录：查看时间范围 */
+#page-report .report-range-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+#page-report .report-range-control label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#page-report .report-range-control select {
+  width: auto;
+  min-width: 130px;
+  padding: 9px 12px;
+  border: 1px solid #d5dfd9;
+  border-radius: 10px;
+  background: #fff;
+  color: #34483e;
+  font: inherit;
+}
+/* 所选期间的手动饮食汇总 */
+#page-report .report-intake-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+#page-report .report-intake-summary > div {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e4ece8;
+  border-radius: 12px;
+  background: #f4f7f5;
+}
+
+#page-report .report-intake-summary span,
+#page-report .report-intake-summary strong,
+#page-report .report-intake-summary small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+#page-report .report-intake-summary span {
+  color: #52645b;
+  font-size: 13px;
+}
+
+#page-report .report-intake-summary strong {
+  margin: 8px 0;
+  color: #243b2e;
+  font-size: 24px;
+}
+
+#page-report .report-intake-summary small {
+  color: #52645b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  #page-report .report-intake-summary {
+    grid-template-columns: 1fr;
+  }
+}
+#exportReportIntakeButton {
+  margin-top: 16px;
+}
+/* 录像中的停止按钮 */
+#recordCameraButton.is-recording {
+  background: #b42318;
+  border-color: #b42318;
+  color: #fff;
+  font-weight: 700;
+}
+
+#recordCameraButton.is-recording:hover:not(:disabled) {
+  background: #912018;
+  border-color: #912018;
+}
+
+#recordCameraButton.is-recording:focus-visible {
+  outline: 3px solid #b42318;
+  outline-offset: 3px;
+}
+
+/* 录像中：固定红色提示，不闪烁 */
+#recordCameraStatus.is-recording {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #f0b4ae;
+  border-radius: 10px;
+  background: #fff1f0;
+  color: #912018;
+  font-weight: 700;
+}
+
+#recordCameraStatus.is-recording::before {
+  content: "";
+  flex: 0 0 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #b42318;
+}
+/* 社区帖子列表 */
+#page-community .community-post-item {
+  padding: 18px 0;
+  border-bottom: 1px solid #e4ece8;
+}
+
+#page-community .community-post-item:last-child {
+  border-bottom: 0;
+}
+
+#page-community .community-post-meta {
+  margin: 0 0 8px;
+  color: #52645b;
+  font-size: 12px;
+}
+
+#page-community .community-post-item h3 {
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+
+#page-community .community-post-preview {
+  margin: 0;
+  color: #43564b;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#communityListStatus {
+  color: #52645b;
+  font-size: 13px;
+}
+/* 底部导航：五个按钮保持同一行 */
+@media (max-width: 900px) {
+  nav.mobile-bottom-nav {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-template-rows: auto !important;
+    gap: 4px !important;
+  }
+
+  nav.mobile-bottom-nav > .mobile-nav-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    position: static !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 8px 2px !important;
+    gap: 4px !important;
+    box-sizing: border-box;
+  }
+
+  nav.mobile-bottom-nav > .mobile-nav-item > span {
+    font-size: 21px;
+    line-height: 1.2;
+  }
+
+  nav.mobile-bottom-nav > .mobile-nav-item > small {
+    display: block;
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+}
+/* 社区昵称设置 */
+#page-community .community-profile-panel {
+  margin-bottom: 18px;
+}
+
+#communityNicknameForm {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#communityNicknameForm label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#communityNickname {
+  flex: 1 1 160px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #d5dfd9;
+  border-radius: 10px;
+  background: #fff;
+  color: #243b2e;
+  font: inherit;
+}
+
+#communityNicknameSave:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#communityProfileStatus {
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+/* 社区发帖表单 */
+#page-community .community-compose-panel {
+  margin-bottom: 18px;
+}
+
+#communityPostForm {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+#communityPostForm label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#communityPostForm input,
+#communityPostForm select,
+#communityPostForm textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #d5dfd9;
+  border-radius: 10px;
+  background: #fff;
+  color: #243b2e;
+  font: inherit;
+}
+
+#communityPostForm textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+
+#communityPostSubmit {
+  align-self: flex-start;
+}
+
+#communityPostSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#communityPostStatus {
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+/* 仅自己的帖子显示删除按钮 */
+#page-community .community-delete-button {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: 1px solid #edc7c3;
+  border-radius: 8px;
+  background: #fff;
+  color: #a12820;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#page-community .community-delete-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#page-community .community-delete-button:focus-visible {
+  outline: 2px solid #a12820;
+  outline-offset: 3px;
+}
+/* 社区详情和评论 */
+#communityPostDetail[hidden] {
+  display: none !important;
+}
+
+#communityPostDetail {
+  margin-top: 18px;
+  scroll-margin-top: 90px;
+}
+
+#communityDetailTitle,
+#communityDetailContent,
+#communityCommentStatus {
+  overflow-wrap: anywhere;
+}
+
+#communityDetailContent,
+#page-community .community-comment-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.8;
+}
+
+#communityDetailContent {
+  margin-bottom: 24px;
+}
+
+#page-community .community-detail-button {
+  margin-top: 12px;
+  margin-right: 8px;
+}
+
+#page-community .community-comment-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #e4ece8;
+}
+
+#communityCommentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+#communityCommentInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #d5dfd9;
+  border-radius: 10px;
+  font: inherit;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+#communityCommentSubmit {
+  align-self: flex-start;
+}
+/* 帖子与评论举报按钮 */
+#page-community .community-report-button {
+  margin-top: 12px;
+  margin-right: 8px;
+  padding: 8px 12px;
+  border: 1px solid #d5dfd9;
+  border-radius: 8px;
+  background: #fff;
+  color: #52645b;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#page-community .community-report-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#page-community .community-report-button:focus-visible {
+  outline: 2px solid #52645b;
+  outline-offset: 3px;
+}
+/* 社区分类筛选 */
+#page-community label[for="communityCategoryFilter"] {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#communityCategoryFilter {
+  width: auto;
+  min-width: 130px;
+  padding: 9px 12px;
+  border: 1px solid #d5dfd9;
+  border-radius: 10px;
+  background: #fff;
+  color: #243b2e;
+  font: inherit;
+}
+/* 社区规则和公开发布确认 */
+#page-community .community-rules {
+  margin-bottom: 18px;
+}
+
+#page-community .community-rules summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#page-community .community-rules ul {
+  padding-left: 22px;
+  line-height: 1.8;
+}
+
+#page-community .community-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+#page-community .community-consent input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 3px 0 0;
+  padding: 0;
+}
+
+#page-community .community-consent span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* PawView 狗狗资料照片预览 */
+.dog-photo-preview {
+  display: none;
+  width: 150px;
+  margin-top: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.dog-photo-preview.visible {
+  display: flex;
+}
+
+#dogPhotoPreviewImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid var(--border-color, #dddddd);
+  background: #f5f5f5;
+}
+
+#removeDogPhotoButton {
+  padding: 8px 14px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background: transparent;
+  color: #555555;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* ==============================
+   PawView 장치 관리 센터
+============================== */
+
+.device-management {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid #e8eee9;
+}
+
+.device-management .panel-heading {
+  margin-bottom: 20px;
+}
+
+.device-management-group {
+  margin-top: 22px;
+}
+
+.device-management-group h4 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #26352c;
+}
+
+.device-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.device-status-item {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px;
+  background: #f7faf8;
+  border: 1px solid #e8f0ea;
+  border-radius: 13px;
+}
+
+.device-status-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf6ee;
+  border-radius: 11px;
+  font-size: 19px;
+}
+
+.device-status-item > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.device-status-item strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #26352c;
+}
+
+.device-status-item small {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #7b8980;
+}
+
+.device-status-indicator {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #b9c2bc;
+}
+
+.device-status-indicator.online {
+  background: #20a765;
+  box-shadow: 0 0 0 3px rgba(32, 167, 101, 0.12);
+}
+
+.device-status-indicator.offline {
+  background: #dc6464;
+}
+
+.device-status-indicator.warning {
+  background: #e5a33b;
+}
+
+.device-error-box {
+  padding: 15px;
+  margin-bottom: 13px;
+  background: #fff9ef;
+  border: 1px solid #f3e5c8;
+  border-radius: 12px;
+}
+
+.device-error-box strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #8a6223;
+}
+
+.device-error-box p {
+  margin: 0;
+  color: #897c67;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#managementReconnectButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 모바일 화면 */
+@media (max-width: 600px) {
+  .device-management {
+    margin-top: 20px;
+    padding-top: 18px;
+  }
+
+  .device-status-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .device-status-item {
+    padding: 13px;
+  }
+
+  .device-management-group {
+    margin-top: 19px;
+  }
+}
+
+/* ================================
+   PawView 로그인 / 회원가입 화면
+================================ */
+
+.auth-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #eaf8f0, #f5fbf7);
+  overflow-y: auto;
+}
+
+.auth-screen[hidden] {
+  display: none !important;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 30px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 15px 50px rgba(25, 100, 60, 0.12);
+  text-align: center;
+}
+
+.auth-logo {
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f7ee;
+  border-radius: 20px;
+  font-size: 34px;
+}
+
+.auth-card h1 {
+  margin: 0;
+  color: #208653;
+  font-size: 30px;
+}
+
+.auth-subtitle {
+  margin: 8px 0 28px;
+  color: #829187;
+  font-size: 14px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 12px;
+}
+
+.auth-form[hidden] {
+  display: none !important;
+}
+
+.auth-form h2 {
+  margin: 0;
+  color: #263b30;
+  font-size: 22px;
+}
+
+.auth-form > p {
+  margin: 0 0 8px;
+  color: #87938b;
+  font-size: 13px;
+}
+
+.auth-form label {
+  color: #42564a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.auth-form input {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border: 1px solid #dce9e0;
+  border-radius: 12px;
+  background: #fbfdfb;
+  color: #263b30;
+  font-size: 15px;
+  outline: none;
+}
+
+.auth-form input:focus {
+  border-color: #20a765;
+  box-shadow: 0 0 0 3px rgba(32, 167, 101, 0.10);
+}
+
+.auth-submit {
+  width: 100%;
+  min-height: 49px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 12px;
+  background: #20a765;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-submit:active {
+  opacity: 0.85;
+}
+
+.auth-switch,
+.auth-forgot {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.auth-switch {
+  padding: 8px;
+  color: #208653;
+  font-weight: 600;
+}
+
+.auth-forgot {
+  padding: 4px;
+  color: #89958d;
+}
+
+.auth-message {
+  min-height: 20px;
+  margin: 16px 0 0;
+  color: #d45b4d;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .auth-screen {
+    padding: 16px;
+  }
+
+  .auth-card {
+    padding: 30px 22px;
+    border-radius: 20px;
+  }
+}
+
+/* PawView 宠物照片放大预览 */
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.photo-lightbox.visible {
+  display: flex;
+}
+
+.photo-lightbox img {
+  display: block;
+  max-width: 100%;
+  max-height: 85vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+    touch-action: none;
+  transform-origin: center center;
+  transform: translate(var(--pan-x, 0px), var(--pan-y, 0px)) scale(var(--zoom, 1));
+  transition: transform 0.1s ease-out;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.photo-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* PawView 宠物照片加载失败时的默认头像 */
+.dog-photo-preview.photo-load-error::before {
+  content: "🐾";
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 16px;
+  border: 1px solid #dcebe1;
+  background: #eaf7ef;
+  font-size: 48px;
+}
+
+.dog-photo-preview.photo-load-error #dogPhotoPreviewImage {
+  display: none;
+}
+
+/* ================================
+   PawView 반려동물 정보 요약 카드
+================================ */
+
+.dog-profile-summary {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 18px 0 22px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0faf4, #ffffff);
+  border: 1px solid #dcefe3;
+  border-radius: 18px;
+}
+
+.dog-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.dog-summary-avatar {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #e2f5e9;
+  border: 2px solid #d4ebdc;
+  border-radius: 18px;
+  font-size: 34px;
+}
+
+.dog-summary-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dog-summary-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.dog-summary-label {
+  color: #20a765;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.dog-summary-title h3 {
+  margin: 5px 0;
+  color: #263b30;
+  font-size: 21px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.dog-summary-title p {
+  margin: 0;
+  color: #7b8b80;
+  font-size: 13px;
+}
+
+.dog-summary-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.dog-summary-item {
+  min-width: 0;
+  padding: 12px 8px;
+  background: #ffffff;
+  border: 1px solid #e6f0e9;
+  border-radius: 12px;
+}
+
+.dog-summary-item span {
+  display: block;
+  margin-bottom: 7px;
+  color: #829187;
+  font-size: 11px;
+}
+
+.dog-summary-item strong {
+  display: block;
+  color: #263b30;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.dog-summary-footer {
+  margin: 14px 0 0;
+  color: #91a097;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@media (max-width: 400px) {
+  .dog-profile-summary {
+    padding: 15px;
+  }
+
+  .dog-summary-info {
+    gap: 6px;
+  }
+
+  .dog-summary-item {
+    padding: 10px 6px;
+  }
+
+  .dog-summary-item strong {
+    font-size: 12px;
+  }
+}
+
+/* PawView 반려동물 프로필 입력 영역 */
+#dogProfileForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#dogProfileForm > label {
+  margin-top: 8px;
+  color: #425348;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#dogProfileForm > input:not([type="file"]),
+#dogProfileForm > select,
+#dogProfileForm > textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #e1eae3;
+  border-radius: 11px;
+  background: #fbfdfb;
+  color: #263b30;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+#dogProfileForm > input:focus,
+#dogProfileForm > select:focus,
+#dogProfileForm > textarea:focus {
+  border-color: #20a765;
+  box-shadow: 0 0 0 3px rgba(32, 167, 101, .09);
+}
+
+#dogProfileForm > textarea {
+  min-height: 95px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+#dogProfileForm > input[type="file"] {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px dashed #cddfd2;
+  border-radius: 11px;
+  background: #f8fcf9;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  #dogProfileForm > input:not([type="file"]),
+  #dogProfileForm > select,
+  #dogProfileForm > textarea {
+    min-height: 44px;
+    font-size: 13px;
+  }
+}
+
+/* PawView 반려동물 사진 미리보기 */
+.dog-photo-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 18px;
+  padding: 20px;
+  border: 1px solid #e5eee7;
+  border-radius: 16px;
+  background: #f8fbf9;
+}
+
+.dog-photo-preview img {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: 190px;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  border-radius: 15px;
+  background: #edf5ef;
+  box-shadow: 0 4px 16px rgba(35, 70, 48, 0.10);
+}
+
+#removeDogPhotoButton {
+  min-width: 110px;
+  min-height: 40px;
+  padding: 9px 18px;
+  border: 1px solid #f0dada;
+  border-radius: 10px;
+  background: #fff7f7;
+  color: #c45d5d;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#removeDogPhotoButton:active {
+  transform: scale(.97);
+}
+
+@media (max-width: 768px) {
+  .dog-photo-preview {
+    padding: 14px;
+  }
+
+  .dog-photo-preview img {
+    max-width: 210px;
+    height: 165px;
+  }
+}
+
+/* PawView 프로필 저장 버튼 */
+#dogProfileForm button[type="submit"] {
+  width: 100%;
+  min-height: 49px;
+  margin-top: 18px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #25b66e, #168b50);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  box-shadow: 0 5px 13px rgba(32, 167, 101, .18);
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+
+#dogProfileForm button[type="submit"]:active {
+  transform: scale(.98);
+  box-shadow: 0 2px 6px rgba(32, 167, 101, .15);
+}
+
+@media (hover: hover) {
+  #dogProfileForm button[type="submit"]:hover {
+    box-shadow: 0 7px 18px rgba(32, 167, 101, .25);
+  }
+}
+
+/* PawView 반려동물 프로필 관리 */
+.dog-profile-manager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 15px;
+  border: 1px solid #e7efe9;
+  border-radius: 14px;
+  background: #f8fbf9;
+}
+
+.dog-profile-manager label {
+  width: 100%;
+  color: #425348;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dog-profile-manager select {
+  flex: 1 1 180px;
+  min-width: 0;
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 1px solid #dfe9e2;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #263b30;
+  font-size: 13px;
+}
+
+.dog-profile-manager button {
+  min-height: 43px;
+  padding: 9px 14px;
+  border: 1px solid #dcebe0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #278452;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dog-profile-manager button:active {
+  transform: scale(.97);
+}
+
+@media (max-width: 400px) {
+  .dog-profile-manager {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .dog-profile-manager select {
+    flex-basis: 100%;
+  }
+
+  .dog-profile-manager button {
+    flex: 1;
+    padding: 9px 8px;
+  }
+}
+
+/* PawView 기본 반려동물 아바타 */
+.dog-photo-default-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 240px;
+  height: 190px;
+  box-sizing: border-box;
+  border: 2px dashed #cfe5d5;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #eef9f1, #f8fcf9);
+  color: #6b9b7b;
+  text-align: center;
+}
+
+.dog-photo-default-avatar[hidden] {
+  display: none !important;
+}
+
+.dog-photo-default-avatar span {
+  font-size: 42px;
+}
+
+.dog-photo-default-avatar strong {
+  color: #477b59;
+  font-size: 13px;
+}
+
+.dog-photo-default-avatar small {
+  color: #91a99a;
+  font-size: 10px;
+}
+
+@media (max-width: 768px) {
+  .dog-photo-default-avatar {
+    max-width: 210px;
+    height: 165px;
+  }
+}
+
+/* 사진이 없을 때 빈 이미지 요소 숨기기 */
+.dog-photo-preview img:not(.visible) {
+  display: none !important;
+}
+
+/* 사진이 등록된 경우에만 이미지 표시 */
+.dog-photo-preview img.visible {
+  display: block;
+}
+
+/* PawView 데이터 백업 및 복원 */
+.backup-section {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid #e5eee7;
+  border-radius: 15px;
+  background: #f8fbf9;
+}
+
+.backup-section h3 {
+  margin-top: 0;
+  color: #304b39;
+  font-size: 15px;
+}
+
+.backup-section p {
+  color: #829187;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.backup-section button {
+  min-height: 42px;
+  padding: 10px 15px;
+  border: 1px solid #d5e9db;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #278452;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.backup-section button:active {
+  transform: scale(.98);
+}
+
+@media (max-width: 768px) {
+  .backup-section {
+    padding: 14px;
+  }
+
+  .backup-section button {
+    max-width: 100%;
+  }
+}
+/* PawView 首页：高级检测功能折叠区域 */
+#page-monitor .monitor-advanced {
+  margin-top: 16px;
+  border: 1px solid #e5eee9;
+  border-radius: 14px;
+  background: #f8fbf9;
+  overflow: hidden;
+}
+
+#page-monitor .monitor-advanced > summary {
+  padding: 15px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #26784c;
+}
+
+#page-monitor .monitor-advanced[open] > summary {
+  border-bottom: 1px solid #e5eee9;
+}
+
+#page-monitor .monitor-advanced-content {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+#page-monitor .monitor-advanced-content > .panel {
+  margin: 0;
+  min-width: 0;
+}
+/* PawView Dashboard：快速操作精简 */
+#page-monitor .quick-panel {
+  gap: 0;
+}
+
+#page-monitor .quick-panel .panel-heading p {
+  display: none;
+}
+
+#page-monitor .quick-panel .tip-box {
+  display: none;
+}
+
+#page-monitor .quick-action {
+  min-height: 48px;
+  padding: 9px 4px;
+  gap: 10px;
+}
+
+#page-monitor .quick-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+#page-monitor .quick-action small {
+  font-size: 10px;
+  margin-top: 2px;
+}
+/* Dashboard：照护记录折叠区域 */
+#page-monitor .care-details {
+  margin-top: 14px;
+  border-top: 1px solid #e8eee9;
+}
+
+#page-monitor .care-details > summary {
+  padding: 15px 4px;
+  cursor: pointer;
+  color: #26784c;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#page-monitor .care-details[open] > summary {
+  margin-bottom: 14px;
+}
+/* =====================================
+   PawView - 照护记录简洁版
+   仅影响首页 care-panel
+===================================== */
+
+/* 三张统计卡片横向排列 */
+#page-monitor .care-panel .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* 小卡片 */
+#page-monitor .care-panel .stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 108px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: none;
+}
+
+/* 图标缩小 */
+#page-monitor .care-panel .stat-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 17px;
+  border-radius: 9px;
+}
+
+/* 统计名称 */
+#page-monitor .care-panel .stat-card p {
+  margin: 0 0 4px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+/* 数值 */
+#page-monitor .care-panel .stat-card strong {
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 隐藏三张卡片内重复的说明 */
+#page-monitor .care-panel .stat-note {
+  display: none;
+}
+
+/* 隐藏统计下方的大段说明文字 */
+#page-monitor .care-panel > .small-disclaimer {
+  display: none;
+}
+
+/* 手机窄屏优化 */
+@media (max-width: 380px) {
+  #page-monitor .care-panel .stats-grid {
+    gap: 5px;
+  }
+
+  #page-monitor .care-panel .stat-card {
+    padding: 9px 2px;
+  }
+
+  #page-monitor .care-panel .stat-card p {
+    font-size: 10px;
+  }
+
+  #page-monitor .care-panel .stat-card strong {
+    font-size: 14px;
+  }
+}
+
+/* ==========================================
+   PawView UI Theme 2026
+   全局视觉美化，不改变原有功能
+========================================== */
+
+/* 1. 统一颜色系统 */
+:root {
+  --green: #278d69;
+  --green-dark: #1d7153;
+  --green-light: #e5f4eb;
+
+  --ink: #253b36;
+  --muted: #81918a;
+  --line: #e2eae3;
+
+  --surface: #ffffff;
+  --bg: #eef4ee;
+
+  --shadow: 0 8px 26px rgba(45, 79, 60, 0.065);
+}
+
+/* 2. 页面背景：柔和渐变 */
+html {
+  background: #eef4ee;
+}
+
+body {
+  color: var(--ink);
+  background: linear-gradient(
+    155deg,
+    #f0f6ed 0%,
+    #eef4f2 48%,
+    #f8f5ee 100%
+  );
+  background-attachment: fixed;
+}
+
+/* 3. 统一白色卡片 */
+.panel,
+.stat-card {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #e6eee7;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+/* 4. 标题与文字层级 */
+.topbar h1,
+.welcome-row h2 {
+  color: #233b34;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.panel-heading h3 {
+  color: #293d36;
+  font-weight: 700;
+}
+
+.panel-heading p,
+.stat-card p,
+.stat-note {
+  color: #85948c;
+}
+
+/* 5. 主按钮 */
+.primary-button {
+  background: linear-gradient(
+    135deg,
+    #2ca876,
+    #23885f
+  );
+  color: #ffffff;
+  border-radius: 13px;
+  box-shadow: 0 4px 12px rgba(39, 141, 105, 0.14);
+}
+
+/* 6. 次要按钮 */
+.secondary-button {
+  background: #f3f7f3;
+  color: #52695c;
+  border: 1px solid #e3ebe4;
+  border-radius: 13px;
+}
+
+/* 7. 统计卡片柔和点缀 */
+.stat-icon.green {
+  background: #e5f4eb;
+  color: #278d69;
+}
+
+.stat-icon.orange {
+  background: #fff2e3;
+  color: #d48d47;
+}
+
+.stat-icon.blue {
+  background: #e9f0ff;
+  color: #6485c4;
+}
+
+/* 8. 输入框统一视觉 */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  border-radius: 12px;
+  border-color: #dce7de;
+}
+
+/* 9. 保持焦点状态清晰 */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 2px solid #278d69;
+  outline-offset: 2px;
+}
+
+/* 10. 提升手机端整体效果 */
+@media (max-width: 768px) {
+  body {
+    background: linear-gradient(
+      160deg,
+      #edf5ee 0%,
+      #f2f7f3 55%,
+      #faf6ef 100%
+    );
+    background-attachment: fixed;
+  }
+
+  .main-content {
+    padding: 17px 13px 28px;
+  }
+
+  .panel {
+    border-radius: 20px;
+    margin-bottom: 15px;
+  }
+
+  .stat-card {
+    border-radius: 17px;
+  }
+
+  /* 底部导航 */
+  nav.mobile-bottom-nav {
+    background: rgba(255, 255, 255, 0.97);
+    border-top: 1px solid #e2ebe4;
+    box-shadow: 0 -5px 24px rgba(36, 72, 52, 0.055);
+  }
+
+  nav.mobile-bottom-nav > .mobile-nav-item.active {
+    background: #e7f4ec;
+    color: #23865e;
+  }
+}
+/* ==========================================
+   PawView 首页布局优化
+   宠物资料 → 实时摄像头 → 状态摘要
+========================================== */
+
+/* 首页采用纵向布局 */
+#page-monitor.active {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 摄像头和快速操作分别参与排序 */
+#page-monitor > .content-grid {
+  display: contents;
+}
+
+/* 1. 宠物信息 */
+#page-monitor > .home-pet-card {
+  order: 1;
+  margin-bottom: 0;
+}
+
+/* 2. 实时摄像头 */
+#page-monitor > .content-grid > .camera-panel {
+  order: 2;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* 3. 今日统计 */
+#page-monitor > .home-summary {
+  order: 3;
+  margin-bottom: 0;
+}
+
+/* 4. 最近检测提醒 */
+#page-monitor > .home-latest-panel {
+  order: 4;
+  margin-bottom: 0;
+}
+
+/* 5. 快速操作 */
+#page-monitor > .content-grid > .quick-panel {
+  order: 5;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* 6. 照护记录 */
+#page-monitor > .care-panel {
+  order: 6;
+  margin-bottom: 0;
+}
+
+/* 7. 活动检测详细统计 */
+#page-monitor > .activity-panel {
+  order: 7;
+  margin-bottom: 0;
+}
+
+/* 兼容已有的额外功能折叠区 */
+#page-monitor > .home-more-section {
+  order: 8;
+}
+
+/* 保留隐藏的兼容数据 */
+#page-monitor > #restStat {
+  display: none;
+}
+
+/* ==========================================
+   PawView Camera UI - Compact
+   仅美化首页摄像头卡片
+========================================== */
+
+/* 摄像头卡片 */
+#page-monitor .camera-panel {
+  padding: 16px;
+  border-radius: 20px;
+}
+
+/* 摄像头标题 */
+#page-monitor .camera-panel > .panel-heading {
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+#page-monitor .camera-panel > .panel-heading h3 {
+  font-size: 16px;
+  color: #263d35;
+}
+
+#page-monitor .camera-panel > .panel-heading p {
+  margin-top: 4px;
+  font-size: 10px;
+  color: #899b91;
+}
+
+/* 摄像头画面 */
+#page-monitor .camera-panel > .camera-scene {
+  height: clamp(220px, 68vw, 300px);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* 状态信息：更紧凑 */
+#page-monitor .camera-panel > .camera-status {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e6eee7;
+  border-radius: 12px;
+  background: #f6faf6;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+#page-monitor .camera-panel > .camera-status p {
+  margin: 3px 0;
+  overflow-wrap: anywhere;
+}
+
+/* 摄像头控制按钮：双列 */
+#page-monitor .camera-panel > .camera-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 14px;
+  align-items: stretch;
+}
+
+#page-monitor .camera-panel > .camera-controls > button {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 7px;
+  font-size: 11px;
+  line-height: 1.4;
+  border-radius: 12px;
+  white-space: normal;
+}
+
+/* 录像按钮单独占满一行 */
+#page-monitor #recordCameraButton {
+  grid-column: 1 / -1;
+}
+
+/* 录像状态和摄像头提示保持可见 */
+#page-monitor #recordCameraStatus,
+#page-monitor #cameraHint {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #85958b;
+  overflow-wrap: anywhere;
+}
+
+/* 可展开的摄像头说明 */
+#page-monitor .camera-help {
+  margin-top: 10px;
+  border-radius: 11px;
+  background: #f3f8f3;
+  color: #6f8477;
+}
+
+#page-monitor .camera-help > summary {
+  cursor: pointer;
+  padding: 11px 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+#page-monitor .camera-help > p {
+  margin: 0;
+  padding: 0 12px 12px;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   PawView Report UI - Compact 2026
+   健康报告页精简与统一配色
+========================================== */
+
+/* 1. 四张统计卡片改为两列 */
+#page-report .report-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+
+/* 2. 统计卡片 */
+#page-report .report-stats .stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 125px;
+  padding: 14px;
+  gap: 8px;
+  border-radius: 17px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(45, 79, 60, 0.045);
+}
+
+#page-report .report-stats .stat-card > div:last-child {
+  width: 100%;
+  min-width: 0;
+}
+
+/* 3. 图标 */
+#page-report .report-stats .stat-icon {
+  width: 37px;
+  height: 37px;
+  border-radius: 11px;
+  font-size: 19px;
+}
+
+/* 4. 统计名称 */
+#page-report .report-stats .stat-card p {
+  margin: 0 0 5px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #7c9085;
+}
+
+/* 5. 统计数值 */
+#page-report .report-stats .stat-card strong {
+  display: block;
+  font-size: 20px;
+  line-height: 1.35;
+  color: #263d36;
+  overflow-wrap: anywhere;
+}
+
+/* 6. 保留数据说明，但压缩高度 */
+#page-report .report-stats .stat-note {
+  display: block;
+  margin-top: 5px;
+  font-size: 9px;
+  line-height: 1.45;
+  color: #96a59c;
+}
+
+/* 7. 报告卡片 */
+#page-report .report-trend-panel,
+#page-report .report-intake-panel,
+#page-report .records-panel,
+#page-report .media-history-panel {
+  padding: 16px;
+  border-radius: 18px;
+  margin-bottom: 14px;
+}
+
+/* 8. 周活动图表 */
+#page-report #weeklyChart {
+  min-height: 130px;
+  padding: 15px 10px;
+  border-radius: 14px;
+  background: #f5f9f4;
+}
+
+/* 9. 饮食记录：两张统计卡片 */
+#page-report .report-intake-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 13px 0;
+}
+
+#page-report .report-intake-summary > div {
+  padding: 13px 10px;
+  border-radius: 13px;
+  border: none;
+}
+
+#page-report .report-intake-summary > div:first-child {
+  background: #fff4e7;
+}
+
+#page-report .report-intake-summary > div:nth-child(2) {
+  background: #edf3ff;
+}
+
+#page-report .report-intake-summary span {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+#page-report .report-intake-summary strong {
+  margin: 7px 0;
+  font-size: 19px;
+}
+
+#page-report .report-intake-summary small {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* 10. 筛选和导出按钮 */
+#page-report .report-range-control {
+  gap: 8px;
+}
+
+#page-report .report-range-control select {
+  min-width: 110px;
+  padding: 9px 11px;
+  border-radius: 11px;
+}
+
+#page-report #exportReportIntakeButton {
+  margin-top: 12px;
+  border-radius: 12px;
+}
+
+/* 11. 手机屏幕：保持双列，不再自动变成单列 */
+@media (max-width: 480px) {
+  #page-report .report-stats,
+  #page-report .report-intake-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #page-report .report-stats .stat-card {
+    padding: 11px;
+  }
+
+  #page-report .report-stats .stat-card strong {
+    font-size: 18px;
+  }
+
+  #page-report .report-intake-summary strong {
+    font-size: 17px;
+  }
+}
+
+/* ==========================================
+   PawView Report UI - Clean Layout
+   报告页面二次精简
+========================================== */
+
+/* 顶部介绍压缩 */
+#page-report > .welcome-row {
+  margin-bottom: 14px;
+}
+
+#page-report > .welcome-row h2 {
+  font-size: 20px;
+  letter-spacing: -0.4px;
+}
+
+/* 数据来源说明改成可阅读的小提示卡 */
+#page-report .report-source-panel {
+  padding: 13px 15px;
+  background: #f8fbf7;
+  border: 1px solid #e3eee5;
+  box-shadow: none;
+}
+
+#page-report .report-source-panel .small-disclaimer {
+  font-size: 10px;
+  line-height: 1.65;
+  color: #82948a;
+}
+
+/* 四张统计卡片保持两列 */
+#page-report .report-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#page-report .report-stats .stat-card {
+  min-height: 118px;
+  padding: 13px 11px;
+}
+
+/* 避免文字撑破小卡片 */
+#page-report .report-stats .stat-card p {
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+
+#page-report .report-stats .stat-card strong {
+  font-size: 18px;
+}
+
+/* 统一报告卡片标题 */
+#page-report .panel-heading h3 {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+#page-report .panel-heading p {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* 已实现的饮食记录卡片 */
+#page-report .report-trend-panel {
+  padding: 15px;
+}
+
+/* 食物与饮水统计并排 */
+#page-report .report-intake-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+/* 隐藏旧的“下一阶段实现”占位卡片
+   不删除实际记录或 JavaScript 数据 */
+#page-report .report-intake-panel {
+  display: none;
+}
+
+/* 综合历史中心更紧凑 */
+#page-report .media-history-panel,
+#page-report .records-panel {
+  padding: 15px;
+}
+
+#page-report .history-filters {
+  gap: 9px;
+}
+
+/* 非常窄的手机屏幕 */
+@media (max-width: 360px) {
+  #page-report .report-stats,
+  #page-report .report-intake-summary {
+    gap: 7px;
+  }
+
+  #page-report .report-stats .stat-card {
+    padding: 10px 8px;
+  }
+}
+
+/* ==========================================
+   PawView Community UI - Compact
+========================================== */
+
+/* 社区模块按手机使用顺序排列 */
+#page-community.active {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 页面标题 */
+#page-community > .welcome-row {
+  order: 1;
+  margin-bottom: 0;
+}
+
+/* 昵称资料 */
+#page-community > .community-profile-panel {
+  order: 2;
+  margin-bottom: 0;
+}
+
+/* 帖子列表优先展示 */
+#page-community > .community-feed-panel {
+  order: 3;
+  margin-bottom: 0;
+}
+
+/* 帖子详情 */
+#page-community > .community-detail-panel {
+  order: 4;
+}
+
+#page-community > .community-detail-panel[hidden] {
+  display: none;
+}
+
+/* 发帖表单默认折叠 */
+#page-community > .community-write-details {
+  order: 5;
+  overflow: hidden;
+  border: 1px solid #e3ece5;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(45,79,60,.045);
+}
+
+#page-community .community-write-details > summary {
+  padding: 16px;
+  cursor: pointer;
+  color: #278d69;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#page-community .community-write-details[open] > summary {
+  border-bottom: 1px solid #e6eee8;
+}
+
+#page-community .community-write-details .community-compose-panel {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 社区使用说明放在底部 */
+#page-community > .community-rules {
+  order: 6;
+  margin: 0;
+}
+
+/* 昵称设置更紧凑 */
+#page-community .community-profile-panel {
+  padding: 15px;
+}
+
+#page-community #communityNicknameForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#page-community #communityNickname {
+  flex: 1 1 140px;
+}
+
+/* 发帖输入区域 */
+#page-community #communityPostForm textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* 保留原来的发帖同意勾选框 */
+#page-community .community-consent {
+  line-height: 1.5;
+}
+
+/* 缩小页面上的重复说明 */
+#page-community .panel-heading p {
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+/* ==========================================
+   PawView Location & Privacy UI 2026
+   突出保护者位置联动隐私快门
+========================================== */
+
+/* 1. 页面卡片纵向排列 */
+#page-location .location-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 2. 隐私快门所在的安全设置优先显示 */
+#page-location .safety-panel {
+  order: 1;
+  padding: 17px;
+  margin: 0;
+}
+
+/* 3. 模拟地图放在后面 */
+#page-location .map-panel {
+  order: 2;
+  padding: 17px;
+  margin: 0;
+}
+
+/* 4. 突出保护者位置开关 */
+#page-location .setting-row:has(#guardianHomeToggle) {
+  margin: 12px 0 8px;
+  padding: 16px 13px;
+  border: 1px solid #cce6d5;
+  border-radius: 14px;
+  background: #edf7ef;
+}
+
+#page-location .setting-row:has(#guardianHomeToggle) strong {
+  color: #247957;
+  font-size: 14px;
+}
+
+/* 5. 保护者位置状态 */
+#page-location .setting-row:has(#guardianLocationStatus) {
+  padding: 13px;
+  margin-bottom: 8px;
+  border: 0;
+  border-radius: 13px;
+  background: #f5f8f3;
+}
+
+#page-location #guardianLocationStatus {
+  color: #278d69;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* 6. 隐私快门状态重点显示 */
+#page-location .setting-row:has(#privacyShutterStatus) {
+  padding: 15px 13px;
+  margin-bottom: 12px;
+  border: 1px solid #dce7f5;
+  border-radius: 13px;
+  background: #eef3ff;
+}
+
+#page-location .setting-row:has(#privacyShutterStatus) strong {
+  color: #506c9a;
+  font-size: 13px;
+}
+
+#page-location #privacyShutterStatus {
+  color: #567bb2;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* 7. 原来的安全设置稍微压缩 */
+#page-location .safety-panel > .setting-row {
+  gap: 10px;
+}
+
+#page-location .safety-panel .setting-row small {
+  line-height: 1.5;
+}
+
+/* 8. 地图缩小，减少页面长度 */
+#page-location .fake-map {
+  height: clamp(200px, 55vw, 265px);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* 9. 安全区域的说明 */
+#page-location .map-footer {
+  padding-top: 11px;
+  gap: 8px 13px;
+}
+
+/* 10. 模拟功能按钮 */
+#page-location #simulateExitButton {
+  margin-top: 13px;
+  min-height: 44px;
+  border-radius: 13px;
+}
+
+/* 11. 手机端进一步优化 */
+@media (max-width: 480px) {
+  #page-location .safety-panel,
+  #page-location .map-panel {
+    padding: 14px;
+  }
+
+  #page-location .setting-row:has(#guardianHomeToggle),
+  #page-location .setting-row:has(#guardianLocationStatus),
+  #page-location .setting-row:has(#privacyShutterStatus) {
+    padding: 12px;
+  }
+
+  #page-location .fake-map {
+    height: 210px;
+  }
+}
+
+/* ==========================================
+   PawView Settings UI - Compact 2026
+   设置页面折叠与精简
+========================================== */
+
+#page-settings .settings-page-panel {
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+/* 各个可折叠设置模块 */
+#page-settings .settings-fold {
+  margin: 12px 0;
+  border: 1px solid #e1ebe3;
+  border-radius: 15px;
+  background: #fcfefb;
+  overflow: hidden;
+}
+
+/* 折叠标题 */
+#page-settings .settings-fold > summary {
+  padding: 17px 14px;
+  color: #284b3b;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+/* 展开状态 */
+#page-settings .settings-fold[open] > summary {
+  color: #278d69;
+  background: #edf7ef;
+  border-bottom: 1px solid #dfebe1;
+}
+
+#page-settings .settings-fold-content {
+  padding: 14px;
+  min-width: 0;
+}
+
+/* 表单更紧凑 */
+#page-settings .settings-fold-content input,
+#page-settings .settings-fold-content select,
+#page-settings .settings-fold-content textarea {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 输入区域间距 */
+#page-settings .settings-fold-content label {
+  line-height: 1.5;
+}
+
+/* 说明文字 */
+#page-settings .settings-fold-content .small-disclaimer {
+  font-size: 10px;
+  line-height: 1.65;
+  color: #87998d;
+}
+
+/* 设备管理 */
+#page-settings .settings-fold-content .device-management {
+  margin: 0;
+}
+
+/* 备份区域 */
+#page-settings .settings-fold-content .backup-section {
+  margin-top: 0;
+}
+
+/* 退出登录按钮保持单独显示 */
+#page-settings #logoutButton {
+  margin-top: 18px;
+  min-height: 44px;
+  border-radius: 12px;
+}
+
+@media (max-width: 480px) {
+  #page-settings .settings-page-panel {
+    padding: 13px;
+  }
+
+  #page-settings .settings-fold > summary {
+    padding: 15px 12px;
+  }
+
+  #page-settings .settings-fold-content {
+    padding: 12px;
+  }
+}
+
+/* ======================================
+   PawView 设置页面布局修复
+   防止三个开关横向挤压
+====================================== */
+
+/* 设置折叠容器占满整行 */
+#page-settings .settings-fold {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  grid-column: 1 / -1;
+}
+
+/* 折叠内容采用正常纵向排列 */
+#page-settings .settings-fold-content {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 每一项设置占满一整行 */
+#page-settings .settings-fold-content > .setting-row {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  gap: 12px;
+  padding: 15px 0;
+}
+
+/* 左侧说明文字正常换行 */
+#page-settings .settings-fold-content > .setting-row > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#page-settings .settings-fold-content > .setting-row strong,
+#page-settings .settings-fold-content > .setting-row small {
+  display: block;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.55;
+}
+
+/* 右侧开关始终保持固定宽度 */
+#page-settings .settings-fold-content > .setting-row > .switch {
+  flex: 0 0 42px;
+  width: 42px;
+  min-width: 42px;
+  margin-left: auto;
+}
+
+/* ==========================================
+   PawView EXPO 绿色主题
+   翡翠绿 + 薄荷绿 + 奶油白
+========================================== */
+
+:root {
+  --expo-green-dark: #087f4d;
+  --expo-green: #16a765;
+  --expo-green-light: #bfeFD4;
+  --expo-background: #edf9f1;
+  --expo-white: #ffffff;
+  --expo-text: #29463a;
+  --expo-muted: #718a7b;
+  --expo-border: #d7eadc;
+}
+
+/* APP 整体背景 */
+body {
+  background: #edf9f1;
+}
+
+/* 主内容区域 */
+.main-content {
+  background: linear-gradient(
+    180deg,
+    #f7fcf8 0%,
+    #edf9f1 100%
+  );
+}
+
+/* 卡片统一为白色 */
+.panel,
+.stat-card,
+.device-card {
+  background: #ffffff;
+  border-color: #d7eadc;
+}
+
+/* 卡片标题 */
+.panel-heading h3 {
+  color: #087f4d;
+}
+
+/* 主要按钮 */
+.primary-button {
+  background: #087f4d;
+  color: #ffffff;
+  border-color: #087f4d;
+}
+
+.primary-button:not(:disabled):hover {
+  background: #06683f;
+}
+
+/* 次要按钮 */
+.secondary-button {
+  background: #f0faf3;
+  color: #087f4d;
+  border-color: #d7eadc;
+}
+
+/* 页面导航选中状态 */
+.nav-item.active {
+  background: #e1f5e8;
+  color: #087f4d;
+}
+
+/* 页面内折叠标题 */
+.settings-fold[open] > summary,
+.monitor-advanced[open] > summary,
+.care-details[open] > summary {
+  background: #e6f7ec;
+  color: #087f4d;
+}
+
+/* 输入框 */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #16a765;
+}
+
+/* 小型说明文字 */
+.small-disclaimer {
+  color: #718a7b;
+}
+
+/* ==========================================
+   PawView EXPO - UI 最终细节优化
+   底部导航 / 摄像头状态 / 卡片标题
+========================================== */
+
+/* 1. 卡片标题突出 PawView 品牌绿 */
+#page-monitor .panel-heading h3,
+#page-report .panel-heading h3,
+#page-community .panel-heading h3,
+#page-location .panel-heading h3,
+#page-settings .panel-heading h3 {
+  color: #087f4d;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* 2. 摄像头状态区域更清晰 */
+#page-monitor .camera-status {
+  background: #f3faf5;
+  border: 1px solid #dfede3;
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+/* 三个摄像头状态文字 */
+#page-monitor .camera-status
+#cameraConnectionStatus,
+#page-monitor .camera-status
+#cameraVideoStatus,
+#page-monitor .camera-status
+#cameraNetworkStatus {
+  line-height: 1.8;
+  margin: 0;
+  font-size: 11px;
+  color: #455f50;
+  overflow-wrap: anywhere;
+}
+
+/* 摄像头预览计时 */
+#page-monitor #cameraPreviewTime {
+  margin-top: 9px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: #718a7b;
+}
+
+/* 3. 底部导航栏 */
+@media (max-width: 768px) {
+
+  /* 导航栏背景 */
+  .bottom-nav,
+  .mobile-nav {
+    background: #ffffff;
+    border-top: 1px solid #e0eee4;
+  }
+
+  /* 未选中的导航 */
+  .bottom-nav button,
+  .mobile-nav button {
+    color: #738a7c;
+  }
+
+  /* 选中的导航 */
+  .bottom-nav button.active,
+  .mobile-nav button.active {
+    background: #e2f5e9;
+    color: #087f4d;
+    border-radius: 13px;
+  }
+
+  /* 导航图标保持清晰 */
+  .bottom-nav button span,
+  .mobile-nav button span {
+    color: inherit;
+  }
+}
+
+/* ========================================
+   PawView Product UI v2
+   宠物真实头像显示
+======================================== */
+
+#page-monitor .home-pet-avatar,
+.pet-avatar {
+  overflow: hidden;
+  position: relative;
+}
+
+/* 首页宠物照片 */
+#page-monitor .home-pet-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+}
+
+/* 桌面侧栏宠物照片 */
+.pet-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+}
+
+/* =====================================
+   PawView Camera Empty State v2
+   默认未连接，手动播放模拟画面
+===================================== */
+
+/* 未连接时显示正式空状态 */
+#cameraScene:not(.camera-active):not(.demo-playing)
+#cameraPlaceholder {
+  display: flex;
+  background: linear-gradient(
+    145deg,
+    #eaf7ef 0%,
+    #f3faf5 55%,
+    #e4f1e9 100%
+  );
+}
+
+/* 播放模拟画面时隐藏空状态 */
+#cameraScene.demo-playing:not(.camera-active)
+#cameraPlaceholder {
+  display: none;
+}
+
+/* 空状态图标 */
+#cameraScene .camera-placeholder .placeholder-icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(8, 127, 77, 0.08);
+  font-size: 34px;
+  margin-bottom: 7px;
+}
+
+/* 标题 */
+#cameraScene .camera-placeholder strong {
+  color: #24513b;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* 说明文字 */
+#cameraScene .camera-placeholder span {
+  max-width: 250px;
+  color: #718a7b;
+  font-size: 12px;
+  line-height: 1.75;
+  word-break: keep-all;
+}
+
+/* 默认状态不显示模拟时间和狗狗标签 */
+#cameraScene:not(.camera-active):not(.demo-playing)
+.scene-time,
+#cameraScene:not(.camera-active):not(.demo-playing)
+.scene-caption {
+  display: none;
+}
+
+/* 模拟预览与真实视频保持原有尺寸 */
+#cameraScene {
+  border-radius: 18px;
+}
+
+/* 小屏幕时保持文字和图标间距 */
+@media (max-width: 480px) {
+  #cameraScene .camera-placeholder {
+    padding: 20px;
+    gap: 10px;
+  }
+
+  #cameraScene .camera-placeholder strong {
+    font-size: 14px;
+  }
+
+  #cameraScene .camera-placeholder span {
+    font-size: 11px;
+  }
+}
+
+/* ==========================================
+   PawView EXPO - 宠物照片上传 UI v3
+========================================== */
+
+#page-settings .paw-photo-upload {
+  margin: 16px 0 22px;
+  padding: 15px;
+  background: #ffffff;
+  border: 1px solid #dcebe0;
+  border-radius: 18px;
+  box-sizing: border-box;
+}
+
+/* 上传区域标题 */
+#page-settings .paw-photo-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+#page-settings .paw-photo-heading strong {
+  color: #24543b;
+  font-size: 14px;
+}
+
+#page-settings .paw-photo-heading span {
+  color: #839689;
+  font-size: 11px;
+}
+
+/* 隐藏原生文件框的视觉外观，
+   但保留可访问性与原有文件选择功能 */
+#page-settings .paw-photo-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  opacity: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* 原有预览区域改为上传卡片 */
+#page-settings .paw-photo-upload .dog-photo-preview {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 15px;
+  gap: 12px;
+  align-items: center;
+  flex-direction: column;
+  border: 1px dashed #cce5d4;
+  background: #f3faf5;
+  border-radius: 15px;
+  box-sizing: border-box;
+}
+
+/* 已上传的真实照片 */
+#page-settings .paw-photo-upload #dogPhotoPreviewImage.visible {
+  display: block;
+  width: 150px;
+  max-width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 3px solid #ffffff;
+}
+
+/* 没有照片时的占位卡片 */
+#page-settings .paw-photo-upload .dog-photo-default-avatar {
+  width: 100%;
+  max-width: 240px;
+  height: 150px;
+  padding: 16px;
+  border: 0;
+  border-radius: 15px;
+  background: #e8f5eb;
+}
+
+#page-settings .paw-photo-upload
+.dog-photo-default-avatar span {
+  font-size: 32px;
+}
+
+/* 选择或更换照片 */
+#page-settings .paw-photo-choose {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 46px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #087f4d;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+#page-settings .paw-photo-choose:active {
+  background: #06663e;
+}
+
+/* 键盘操作时显示焦点 */
+#page-settings .paw-photo-upload:has(
+  .paw-photo-input:focus-visible
+) .paw-photo-choose {
+  outline: 3px solid #8ad5ae;
+  outline-offset: 3px;
+}
+
+/* 删除按钮 */
+#page-settings .paw-photo-upload #removeDogPhotoButton {
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  background: #ffffff;
+  color: #a44a4a;
+  border: 1px solid #e8d9d9;
+  border-radius: 12px;
+}
+
+/* 辅助说明 */
+#page-settings .paw-photo-caption,
+#page-settings .paw-photo-hint {
+  margin: 0;
+  text-align: center;
+  color: #718a7b;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+#page-settings .paw-photo-hint {
+  font-size: 10px;
+}
+
+/* 照片尚未登记时预览区域也要完整显示 */
+#page-settings .paw-photo-upload
+.dog-photo-default-avatar[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  #page-settings .paw-photo-upload {
+    padding: 12px;
+  }
+
+  #page-settings .paw-photo-upload .dog-photo-preview {
+    padding: 12px;
+  }
+}
+
+/* ==========================================
+   PawView EXPO - UI 精简第四批
+   五页统一 / 报告空状态 / 底部说明
+========================================== */
+
+/* 1. 全局说明改成简洁折叠入口 */
+.app-footer {
+  padding: 8px 12px 16px;
+}
+
+.app-info-details {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.app-info-details > summary {
+  padding: 9px 12px;
+  color: #718a7b;
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.app-info-details > p {
+  margin: 8px 0 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f0f8f2;
+  color: #63796a;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+/* 2. 报告页数据说明 */
+#page-report .report-source-panel {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #dcebe0;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+#page-report .report-source-summary {
+  padding: 15px 16px;
+  color: #087f4d;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#page-report .report-source-panel[open] {
+  padding-bottom: 14px;
+}
+
+#page-report .report-source-panel .panel-heading,
+#page-report .report-source-panel .small-disclaimer {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+/* 3. 报告统计卡片 */
+#page-report .report-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#page-report .report-stats .stat-card {
+  padding: 14px 12px;
+  border-radius: 16px;
+  min-width: 0;
+}
+
+#page-report .report-stats .stat-card p {
+  font-size: 11px;
+  line-height: 1.55;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+#page-report .report-stats .stat-card strong {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+#page-report .report-stats .stat-note {
+  font-size: 10px;
+  line-height: 1.55;
+  color: #809184;
+}
+
+/* 4. 没有统计数据时的显示 */
+#page-report .report-empty,
+#page-report #weeklyChart {
+  border: 1px dashed #dce9df;
+  border-radius: 14px;
+  background: #f5faf6;
+  color: #718579;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+#page-report .report-empty {
+  padding: 18px 14px;
+  font-size: 12px;
+}
+
+/* 5. 五个页面统一文字间距 */
+.page .panel-heading h3 {
+  line-height: 1.45;
+  letter-spacing: -0.2px;
+}
+
+.page .panel-heading p {
+  line-height: 1.65;
+  color: #829488;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 6. 折叠组件的统一外观 */
+.page details > summary {
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page details > summary:focus-visible {
+  outline: 2px solid #16a765;
+  outline-offset: 2px;
+}
+
+/* 7. 手机适配 */
+@media (max-width: 480px) {
+  #page-report .report-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  #page-report .report-stats .stat-card {
+    padding: 12px 10px;
+  }
+
+  #page-report .report-stats .stat-card strong {
+    font-size: 16px;
+  }
+
+  .page .panel-heading h3 {
+    font-size: 15px;
+  }
+
+  .page .panel-heading p {
+    font-size: 11px;
+  }
+
+  .app-footer {
+    padding-bottom: 12px;
+  }
+}
+
+/* 极窄屏幕避免文字再次被挤压 */
+@media (max-width: 320px) {
+  #page-report .report-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==========================================
+   PawView EXPO - 第五批首页精细美化
+   仅调整首页显示，不修改业务逻辑
+========================================== */
+
+/* 首页宠物信息卡片 */
+#page-monitor .home-pet-card {
+  border: 1px solid #deebe1;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(24, 80, 45, 0.045);
+}
+
+/* 宠物照片 */
+#page-monitor .home-pet-avatar {
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: #e9f5ec;
+}
+
+#page-monitor .home-pet-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* 宠物名称 */
+#page-monitor .home-pet-details h2 {
+  color: #24513b;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+/* 品种、年龄等次要信息 */
+#page-monitor .home-pet-meta {
+  color: #819285;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+}
+
+/* 首页信息卡片统一质感 */
+#page-monitor .stat-card,
+#page-monitor .camera-panel,
+#page-monitor .home-latest-panel {
+  border: 1px solid #e0ede3;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(24, 80, 45, 0.045);
+}
+
+/* 摄像头区域标题 */
+#page-monitor .camera-panel
+> .panel-heading h3 {
+  color: #24513b;
+  font-weight: 750;
+}
+
+/* 摄像头空状态保持简洁 */
+#page-monitor .camera-placeholder {
+  gap: 9px;
+  text-align: center;
+}
+
+#page-monitor .camera-placeholder strong {
+  color: #24513b;
+  font-weight: 750;
+}
+
+#page-monitor .camera-placeholder span {
+  color: #718a7b;
+  line-height: 1.65;
+}
+
+/* 状态信息减少视觉重量 */
+#page-monitor .camera-status {
+  box-shadow: none;
+}
+
+#page-monitor .camera-status p {
+  overflow-wrap: break-word;
+}
+
+/* 操作按钮统一圆角 */
+#page-monitor .camera-controls
+.primary-button,
+#page-monitor .camera-controls
+.secondary-button {
+  border-radius: 12px;
+  min-height: 44px;
+  line-height: 1.45;
+  white-space: normal;
+}
+
+/* 录制状态和使用说明 */
+#page-monitor #recordCameraStatus,
+#page-monitor .camera-hint {
+  color: #7e9184;
+  line-height: 1.6;
+}
+
+/* 手机端微调 */
+@media (max-width: 480px) {
+  #page-monitor .home-pet-card {
+    padding: 13px;
+  }
+
+  #page-monitor .home-pet-details h2 {
+    font-size: 18px;
+  }
+
+  #page-monitor .home-pet-meta {
+    font-size: 11px;
+  }
+
+  #page-monitor .stat-card {
+    padding: 12px;
+  }
+
+  #page-monitor .stat-card p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  #page-monitor .stat-card strong {
+    font-size: 17px;
+  }
+
+  #page-monitor .stat-note {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  #page-monitor .camera-panel {
+    padding: 14px;
+  }
+
+  #page-monitor .camera-controls {
+    gap: 9px;
+  }
+}
+
+/* ==========================================
+   PawView 第六批：首页信息精简
+========================================== */
+
+/* 摄像头状态卡片纵向排列 */
+#page-monitor .camera-status {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* 主要连接状态 */
+#page-monitor #cameraConnectionStatus {
+  font-size: 12px;
+  font-weight: 700;
+  color: #24513b;
+  line-height: 1.6;
+}
+
+/* 详细连接信息 */
+#page-monitor .camera-extra-status {
+  width: 100%;
+  min-width: 0;
+}
+
+#page-monitor .camera-extra-status > summary {
+  padding: 8px 0;
+  color: #087f4d;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#page-monitor .camera-extra-status-content {
+  padding: 10px 0 4px;
+  border-top: 1px solid #e1ece4;
+}
+
+#page-monitor .camera-extra-status-content p {
+  margin: 6px 0;
+  font-size: 11px;
+  line-height: 1.65;
+  color: #718579;
+  overflow-wrap: break-word;
+}
+
+/* 活动图表折叠入口 */
+#page-monitor .activity-chart-details {
+  width: 100%;
+  min-width: 0;
+}
+
+#page-monitor .activity-chart-details > summary {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #edf8f0;
+  color: #087f4d;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#page-monitor .activity-chart-details[open] > summary {
+  margin-bottom: 16px;
+}
+
+/* 展开后保留图表原有高度 */
+#page-monitor .activity-chart-details .activity-chart {
+  min-height: 115px;
+}
+
+/* ==========================================
+   PawView 第六批：摄像头状态折叠修复
+========================================== */
+
+/* 默认关闭时，强制隐藏详细信息 */
+#page-monitor .camera-extra-status:not([open])
+> .camera-extra-status-content {
+  display: none !important;
+}
+
+/* 展开时才显示详细信息 */
+#page-monitor .camera-extra-status[open]
+> .camera-extra-status-content {
+  display: block !important;
+}
+
+/* 折叠标题保持可见 */
+#page-monitor .camera-extra-status > summary {
+  display: list-item;
+  padding: 9px 0;
+  color: #087f4d;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 主连接状态保持显示 */
+#page-monitor #cameraConnectionStatus {
+  display: block;
+  margin: 0;
+  color: #24513b;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+/* ===== Raspberry Pi 4 摄像头配置 ===== */
+
+.pi-camera-panel {
+  margin: 18px 0;
+  padding: 0;
+  border: 1px solid #dce9df;
+  border-radius: 18px;
+  background: #f7faf7;
+  overflow: hidden;
+}
+
+.pi-camera-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px;
+  cursor: pointer;
+  color: #294d3c;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pi-camera-summary::marker {
+  color: #52846a;
+}
+
+.pi-camera-badge {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #e7eee8;
+  color: #54705e;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pi-camera-body {
+  padding: 0 16px 18px;
+}
+
+.pi-camera-description {
+  margin: 0 0 16px;
+  color: #62776a;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pi-camera-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.pi-camera-field label {
+  color: #365d48;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pi-camera-field input,
+.pi-camera-field select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #d7e5da;
+  border-radius: 12px;
+  background: #fff;
+  color: #314b3a;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.pi-camera-field input:focus,
+.pi-camera-field select:focus {
+  border-color: #75aa88;
+  box-shadow: 0 0 0 3px rgba(117, 170, 136, 0.13);
+}
+
+.pi-camera-save {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.pi-camera-status {
+  margin: 14px 0 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: #eaf3ec;
+  color: #42674f;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.pi-camera-note {
+  margin: 10px 0 0;
+  color: #809087;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* ===== PawView 摄像头模式切换 ===== */
+
+.camera-source-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 5px;
+  border-radius: 16px;
+  background: #eaf2ec;
+}
+
+.camera-source-btn {
+  min-width: 0;
+  padding: 12px 8px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #698071;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.camera-source-btn.is-active {
+  background: #fff;
+  color: #276348;
+  box-shadow: 0 2px 8px rgba(41, 94, 62, 0.1);
+}
+
+.camera-source-btn:focus-visible {
+  outline: 2px solid #4e9470;
+  outline-offset: 2px;
+}
+
+.pi-preview {
+  min-height: 210px;
+  padding: 25px 16px;
+  border: 1px dashed #b8d5c0;
+  border-radius: 18px;
+  background: linear-gradient(
+    155deg, #edf5ef, #f8faf7
+  );
+  text-align: center;
+  color: #416a50;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pi-preview:not([hidden]) {
+  display: flex;
+}
+
+.pi-preview-icon {
+  font-size: 32px;
+}
+
+.pi-preview strong {
+  font-size: 15px;
+}
+
+.pi-preview p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pi-preview span {
+  color: #84998a;
+  font-size: 11px;
+}
+
+/* 树莓派模式下隐藏手机摄像头专属功能 */
+.camera-panel.pi-mode #cameraScene,
+.camera-panel.pi-mode .camera-status,
+.camera-panel.pi-mode .camera-help,
+.camera-panel.pi-mode .camera-controls,
+.camera-panel.pi-mode .monitor-advanced {
+  display: none !important;
+}
+
