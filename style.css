@@ -135,13 +135,15 @@ input:focus-visible {
 
 .pet-switcher select {
   position: absolute;
-  right: 8px;
-  bottom: 7px;
-  width: 24px;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 42px;
   opacity: .01;
   cursor: pointer;
+  z-index: 2;
 }
-
 .pet-switcher:after {
   content: "⌄";
   position: absolute;
@@ -4687,14 +4689,14 @@ button:focus-visible {
    设置页面折叠与精简
 ========================================== */
 
-#page-settings .settings-page-panel {
+:is(#page-settings, #page-pet-profile) .settings-page-panel {
   padding: 16px;
   background: #ffffff;
   border-radius: 20px;
 }
 
 /* 各个可折叠设置模块 */
-#page-settings .settings-fold {
+:is(#page-settings, #page-pet-profile) .settings-fold {
   margin: 12px 0;
   border: 1px solid #e1ebe3;
   border-radius: 15px;
@@ -4703,7 +4705,7 @@ button:focus-visible {
 }
 
 /* 折叠标题 */
-#page-settings .settings-fold > summary {
+:is(#page-settings, #page-pet-profile) .settings-fold > summary {
   padding: 17px 14px;
   color: #284b3b;
   font-size: 13px;
@@ -4713,64 +4715,64 @@ button:focus-visible {
 }
 
 /* 展开状态 */
-#page-settings .settings-fold[open] > summary {
+:is(#page-settings, #page-pet-profile) .settings-fold[open] > summary {
   color: #278d69;
   background: #edf7ef;
   border-bottom: 1px solid #dfebe1;
 }
 
-#page-settings .settings-fold-content {
+:is(#page-settings, #page-pet-profile) .settings-fold-content {
   padding: 14px;
   min-width: 0;
 }
 
 /* 表单更紧凑 */
-#page-settings .settings-fold-content input,
-#page-settings .settings-fold-content select,
-#page-settings .settings-fold-content textarea {
+:is(#page-settings, #page-pet-profile) .settings-fold-content input,
+:is(#page-settings, #page-pet-profile) .settings-fold-content select,
+:is(#page-settings, #page-pet-profile) .settings-fold-content textarea {
   max-width: 100%;
   box-sizing: border-box;
 }
 
 /* 输入区域间距 */
-#page-settings .settings-fold-content label {
+:is(#page-settings, #page-pet-profile) .settings-fold-content label {
   line-height: 1.5;
 }
 
 /* 说明文字 */
-#page-settings .settings-fold-content .small-disclaimer {
+:is(#page-settings, #page-pet-profile) .settings-fold-content .small-disclaimer {
   font-size: 10px;
   line-height: 1.65;
   color: #87998d;
 }
 
 /* 设备管理 */
-#page-settings .settings-fold-content .device-management {
+:is(#page-settings, #page-pet-profile) .settings-fold-content .device-management {
   margin: 0;
 }
 
 /* 备份区域 */
-#page-settings .settings-fold-content .backup-section {
+:is(#page-settings, #page-pet-profile) .settings-fold-content .backup-section {
   margin-top: 0;
 }
 
 /* 退出登录按钮保持单独显示 */
-#page-settings #logoutButton {
+:is(#page-settings, #page-pet-profile) #logoutButton {
   margin-top: 18px;
   min-height: 44px;
   border-radius: 12px;
 }
 
 @media (max-width: 480px) {
-  #page-settings .settings-page-panel {
+:is(#page-settings, #page-pet-profile) .settings-page-panel {
     padding: 13px;
   }
 
-  #page-settings .settings-fold > summary {
+:is(#page-settings, #page-pet-profile).settings-fold > summary {
     padding: 15px 12px;
   }
 
-  #page-settings .settings-fold-content {
+:is(#page-settings, #page-pet-profile) .settings-fold-content {
     padding: 12px;
   }
 }
@@ -5115,7 +5117,7 @@ textarea:focus {
    PawView EXPO - 宠物照片上传 UI v3
 ========================================== */
 
-#page-settings .paw-photo-upload {
+#page-pet-profile .paw-photo-upload {
   margin: 16px 0 22px;
   padding: 15px;
   background: #ffffff;
@@ -5125,7 +5127,7 @@ textarea:focus {
 }
 
 /* 上传区域标题 */
-#page-settings .paw-photo-heading {
+#page-pet-profile .paw-photo-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -5134,19 +5136,19 @@ textarea:focus {
   margin-bottom: 12px;
 }
 
-#page-settings .paw-photo-heading strong {
+#page-pet-profile .paw-photo-heading strong {
   color: #24543b;
   font-size: 14px;
 }
 
-#page-settings .paw-photo-heading span {
+#page-pet-profile .paw-photo-heading span {
   color: #839689;
   font-size: 11px;
 }
 
 /* 隐藏原生文件框的视觉外观，
    但保留可访问性与原有文件选择功能 */
-#page-settings .paw-photo-input {
+#page-pet-profile .paw-photo-input {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -5159,7 +5161,7 @@ textarea:focus {
 }
 
 /* 原有预览区域改为上传卡片 */
-#page-settings .paw-photo-upload .dog-photo-preview {
+#page-pet-profile .paw-photo-upload .dog-photo-preview {
   display: flex;
   width: 100%;
   margin: 0;
@@ -5174,7 +5176,7 @@ textarea:focus {
 }
 
 /* 已上传的真实照片 */
-#page-settings .paw-photo-upload #dogPhotoPreviewImage.visible {
+#page-pet-profile .paw-photo-upload #dogPhotoPreviewImage.visible {
   display: block;
   width: 150px;
   max-width: 100%;
@@ -5185,7 +5187,7 @@ textarea:focus {
 }
 
 /* 没有照片时的占位卡片 */
-#page-settings .paw-photo-upload .dog-photo-default-avatar {
+#page-pet-profile .paw-photo-upload .dog-photo-default-avatar {
   width: 100%;
   max-width: 240px;
   height: 150px;
@@ -5195,13 +5197,13 @@ textarea:focus {
   background: #e8f5eb;
 }
 
-#page-settings .paw-photo-upload
+#page-pet-profile .paw-photo-upload
 .dog-photo-default-avatar span {
   font-size: 32px;
 }
 
 /* 选择或更换照片 */
-#page-settings .paw-photo-choose {
+#page-pet-profile .paw-photo-choose {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -5223,7 +5225,7 @@ textarea:focus {
 }
 
 /* 键盘操作时显示焦点 */
-#page-settings .paw-photo-upload:has(
+#page-pet-profile .paw-photo-upload:has(
   .paw-photo-input:focus-visible
 ) .paw-photo-choose {
   outline: 3px solid #8ad5ae;
@@ -5231,7 +5233,7 @@ textarea:focus {
 }
 
 /* 删除按钮 */
-#page-settings .paw-photo-upload #removeDogPhotoButton {
+#page-pet-profile .paw-photo-upload #removeDogPhotoButton {
   width: 100%;
   min-height: 44px;
   margin: 0;
@@ -5242,8 +5244,8 @@ textarea:focus {
 }
 
 /* 辅助说明 */
-#page-settings .paw-photo-caption,
-#page-settings .paw-photo-hint {
+#page-pet-profile .paw-photo-caption,
+#page-pet-profile .paw-photo-hint {
   margin: 0;
   text-align: center;
   color: #718a7b;
@@ -5251,22 +5253,22 @@ textarea:focus {
   line-height: 1.6;
 }
 
-#page-settings .paw-photo-hint {
+#page-pet-profile .paw-photo-hint {
   font-size: 10px;
 }
 
 /* 照片尚未登记时预览区域也要完整显示 */
-#page-settings .paw-photo-upload
+#page-pet-profile .paw-photo-upload
 .dog-photo-default-avatar[hidden] {
   display: none !important;
 }
 
 @media (max-width: 480px) {
-  #page-settings .paw-photo-upload {
+ #page-pet-profile .paw-photo-upload {
     padding: 12px;
   }
 
-  #page-settings .paw-photo-upload .dog-photo-preview {
+  #page-pet-profile .paw-photo-upload .dog-photo-preview {
     padding: 12px;
   }
 }
@@ -5870,12 +5872,538 @@ textarea:focus {
   font-size: 11px;
 }
 
-/* 树莓派模式下隐藏手机摄像头专属功能 */
+/* Pi 模式只隐藏手机摄像头专属操作 */
+
 .camera-panel.pi-mode #cameraScene,
-.camera-panel.pi-mode .camera-status,
-.camera-panel.pi-mode .camera-help,
-.camera-panel.pi-mode .camera-controls,
-.camera-panel.pi-mode .monitor-advanced {
+.camera-panel.pi-mode #cameraConnectionStatus,
+.camera-panel.pi-mode > .camera-controls,
+.camera-panel.pi-mode > .camera-help,
+.camera-panel.pi-mode #dogVisionPanel,
+.camera-panel.pi-mode #soundVisionLink {
   display: none !important;
 }
 
+/* 连接设置入口与返回手机模式入口仍然可用 */
+.camera-panel.pi-mode > .camera-status {
+  display: flex !important;
+}
+
+/* Pi 模式保留声音检测 */
+.camera-panel.pi-mode > .monitor-advanced {
+  display: block;
+}
+
+#returnPhoneCameraButton[hidden] {
+  display: none !important;
+}
+
+
+/* PawView upgrade: coherent focus, safe areas and narrow-screen layout. */
+:root { --paw-radius: 18px; --paw-border: #dce9df; --paw-ring: #387953; }
+.auth-restore-status { padding: 14px; text-align: center; color: #3f7152; font-size: 14px; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, summary:focus-visible { outline: 3px solid var(--paw-ring); outline-offset: 2px; }
+.camera-panel, .report-panel, .pi-camera-panel { border-radius: var(--paw-radius); }
+.pi-preview-status { padding: 8px 12px; border-radius: 10px; background: #e8f2eb; color: #325d42; font-size: 12px; overflow-wrap: anywhere; }
+.pi-preview-stream { width: 100%; max-height: 52vh; object-fit: contain; border-radius: 12px; background: #14271c; }
+.pi-preview-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.pi-preview-actions button { border-radius: 12px; padding: 10px 16px; border: 1px solid #bfd8c6; background: #fff; color: #27573e; font-weight: 600; }
+.pi-preview-actions button:disabled { opacity: .48; cursor: not-allowed; }
+.mobile-bottom-nav { padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
+@media(max-width: 440px) {
+  .camera-source-switch { gap: 4px; }
+  .camera-source-btn { font-size: 12px; overflow-wrap: anywhere; }
+  .pi-camera-field input, .pi-camera-field select { max-width: 100%; }
+  .panel, .card, .camera-panel { min-width: 0; overflow-wrap: anywhere; }
+  input, textarea, select { font-size: max(16px, 1em); }
+}
+
+.paw-care-shortcut { cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
+.paw-care-shortcut:hover { box-shadow: 0 6px 22px rgba(49,105,70,.12); transform: translateY(-1px); }
+.paw-care-shortcut:focus-visible { outline: 3px solid #387953; outline-offset: 3px; }
+
+/* Local PawView media viewer: uses app-owned files only. */
+.paw-media-overlay { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; background: rgba(10,25,16,.8); padding: 16px; }
+.paw-media-dialog { width: min(720px,100%); max-height: 90dvh; overflow: auto; padding: 14px; border-radius: 18px; background: #f7faf7; display: grid; gap: 12px; }
+.paw-media-content { max-width: 100%; max-height: 68dvh; border-radius: 12px; margin: 0 auto; }
+.paw-media-close { justify-self: end; padding: 10px 16px; border-radius: 12px; border: 1px solid #bed9c8; background: white; color: #285f40; }
+.paw-media-message { color: #4d6f58; font-size: 12px; text-align: center; }
+
+/* ==========================================
+   PawView - 首页摄像头与档案入口优化
+========================================== */
+
+/* 1. 隐藏首页次要展示，保留原有 DOM */
+#page-monitor > .home-summary,
+#page-monitor > .home-latest-panel,
+#page-monitor > .activity-panel,
+#page-monitor .home-pet-meta,
+#page-monitor .home-pet-card .date-pill {
+  display: none !important;
+}
+
+/* 2. 首页宠物头像及名字 */
+#page-monitor .home-pet-card {
+  padding: 9px 12px;
+  min-height: 60px;
+  margin-bottom: 0;
+}
+
+#page-monitor .home-pet-info {
+  gap: 12px;
+}
+
+#page-monitor #homePetAvatar {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 25px;
+}
+
+#page-monitor #homePetAvatar:active {
+  opacity: .8;
+}
+
+#page-monitor .home-pet-details h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* 3. 摄像头成为首页主要内容 */
+#page-monitor .camera-panel {
+  padding: 12px;
+  min-width: 0;
+}
+
+#page-monitor .camera-panel > .panel-heading {
+  margin-bottom: 9px;
+  gap: 8px;
+}
+
+.camera-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.camera-fullscreen-button {
+  min-height: 36px;
+  padding: 7px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* 默认保持原始视频比例 */
+#page-monitor #cameraScene #cameraVideo {
+  object-fit: contain;
+  background: #15231c;
+}
+
+/* 真实画面与模拟画面的默认尺寸 */
+#page-monitor .camera-panel > #cameraScene {
+  width: 100%;
+  height: clamp(300px, 54vh, 680px);
+  min-height: 0;
+  border-radius: 14px;
+}
+
+/* 未连接时使用较紧凑的占位画面 */
+#page-monitor .camera-panel >
+#cameraScene:not(.camera-active):not(.demo-playing) {
+  height: clamp(180px, 33vh, 300px);
+}
+
+#page-monitor #cameraPlaceholder {
+  padding: 14px;
+  gap: 7px;
+}
+
+#page-monitor #cameraPlaceholder .placeholder-icon {
+  width: 56px;
+  height: 56px;
+  font-size: 27px;
+  margin-bottom: 0;
+}
+
+/* 4. 首页连接状态和设置入口 */
+#page-monitor .camera-panel > .camera-status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 7px 10px;
+  margin-top: 8px;
+}
+
+#openCameraSettingsButton {
+  color: #087f4d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* 5. 拍照与录像并排显示 */
+#page-monitor .camera-panel > .camera-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+#page-monitor #snapshotButton,
+#page-monitor #recordCameraButton {
+  grid-column: auto;
+  min-height: 44px;
+  font-size: 12px;
+}
+
+#page-monitor #recordCameraStatus {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+/* 6. 摄像头连接设置 */
+#cameraConnectionSettings {
+  padding: 14px;
+  margin-bottom: 18px;
+  border: 1px solid #dcebe0;
+  border-radius: 16px;
+  background: #f7fbf7;
+  scroll-margin-top: 12px;
+}
+
+#cameraSettingsPhone > .camera-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+#cameraSettingsPhone #playButton {
+  grid-column: 1 / -1;
+}
+
+#cameraSettingsPhone .camera-extra-status,
+#cameraSettingsPhone .camera-help {
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 12px;
+  background: #edf5ef;
+}
+
+#cameraSettingsPhone .camera-extra-status:not([open])
+> .camera-extra-status-content {
+  display: none !important;
+}
+
+#cameraSettingsPhone .camera-extra-status-content p {
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+#cameraSettingsPhone #cameraHint {
+  display: block;
+  margin: 8px 0;
+  font-size: 12px;
+  color: #718579;
+}
+
+
+/* 手机摄像头信息仅在手机模式下显示 */
+#page-monitor .camera-panel.pi-mode > #cameraSettingsPhone {
+  display: none !important;
+}
+
+/* Raspberry Pi 设置页始终显示连接操作 */
+#cameraConnectionSettings #piCameraActions {
+  display: block;
+  margin: 12px 0;
+}
+
+#cameraConnectionSettings #piConnectionMessage {
+  display: block;
+  margin: 8px 0;
+  font-size: 12px;
+  color: #537862;
+}
+
+/* Raspberry Pi 连接按钮布局 */
+#piCameraActions .pi-preview-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#piCameraActions .pi-preview-actions button {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#piCameraActions .pi-preview-actions button:first-child {
+  background: #087f4d;
+  color: #ffffff;
+}
+
+#piCameraActions .pi-preview-actions button:last-child {
+  grid-column: 1 / -1;
+}
+
+#piCameraActions .pi-preview-actions button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* 7. 独立宠物档案页面 */
+#page-pet-profile .pet-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+#page-pet-profile .pet-profile-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #24513b;
+}
+
+#page-pet-profile .pet-profile-header button {
+  min-width: 65px;
+}
+
+/* 8. 手机竖屏适配 */
+@media (max-width: 768px) {
+
+  #page-monitor.active {
+    gap: 8px;
+  }
+
+  #page-monitor .camera-panel {
+    padding: 8px;
+  }
+
+  #page-monitor .camera-panel > #cameraScene {
+    height: clamp(
+      180px,
+      calc(100vh - 370px),
+      520px
+    );
+
+    height: clamp(
+      180px,
+      calc(100dvh - 370px - env(safe-area-inset-bottom, 0px)),
+      520px
+    );
+  }
+
+  #page-monitor .camera-panel >
+  #cameraScene:not(.camera-active):not(.demo-playing) {
+    height: clamp(160px, 32vh, 270px);
+  }
+
+  #page-monitor .camera-panel > .panel-heading p {
+    font-size: 10px;
+  }
+}
+
+/* ==========================================
+   9. 页面内全屏摄像头
+   不创建新 video，不重新连接摄像头
+========================================== */
+
+body.paw-camera-fullscreen {
+  overflow: hidden;
+}
+
+/* 避免原页面进入动画影响 fixed 定位 */
+body.paw-camera-fullscreen #page-monitor {
+  animation: none;
+}
+
+/* 全屏期间隐藏底部导航 */
+body.paw-camera-fullscreen .mobile-bottom-nav {
+  visibility: hidden;
+}
+
+#page-monitor.active .camera-panel.paw-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  margin: 0;
+  padding:
+    max(12px, env(safe-area-inset-top, 0px))
+    12px
+    max(12px, env(safe-area-inset-bottom, 0px));
+
+  border: 0;
+  border-radius: 0;
+  background: #15231c;
+  overflow-y: auto;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+> .panel-heading {
+  flex: 0 0 auto;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+> .panel-heading h3 {
+  color: #ffffff;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+> .panel-heading p {
+  color: #b9cec0;
+}
+
+/* 同一个摄像头区域占据剩余空间 */
+#page-monitor.active .camera-panel.paw-fullscreen
+> #cameraScene:not([hidden]) {
+  flex: 1 1 0;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  border-radius: 10px;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+> #piPreview:not([hidden]) {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+.pi-preview-stream:not([hidden]) {
+  flex: 1 1 0;
+  height: 0;
+  min-height: 0;
+  max-height: none;
+  object-fit: contain;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+> .camera-controls {
+  flex: 0 0 auto;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+> .camera-status {
+  flex: 0 0 auto;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+> .monitor-advanced {
+  display: none;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+#recordCameraStatus {
+  color: #c3d6c9;
+}
+
+#page-monitor .camera-panel.paw-fullscreen
+#cameraFullscreenButton {
+  background: #405449;
+  color: #ffffff;
+  border-color: #60786a;
+}
+
+/* PawView 左侧宠物档案入口 */
+
+.pet-switcher .sidebar-profile-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  flex: 1;
+  min-width: 0;
+
+  margin-right: 30px;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+  color: inherit;
+
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar-profile-entry .pet-meta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-profile-entry .pet-meta strong,
+.sidebar-profile-entry .pet-meta small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-profile-entry:hover .pet-avatar {
+  box-shadow: 0 0 0 2px #bcdac8;
+}
+
+.pet-switcher:after {
+  pointer-events: none;
+}
+.pi-audio-option {
+  padding: 12px;
+  margin: 12px 0;
+
+  background: #edf5ef;
+  border: 1px solid #d4e6d8;
+  border-radius: 12px;
+}
+
+.pi-audio-option label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.pi-audio-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: #087f4d;
+}
+
+.pi-audio-option strong {
+  display: block;
+  color: #285f40;
+  font-size: 13px;
+}
+
+.pi-audio-option small {
+  display: block;
+  margin-top: 5px;
+  color: #6d8376;
+  font-size: 11px;
+  line-height: 1.6;
+}

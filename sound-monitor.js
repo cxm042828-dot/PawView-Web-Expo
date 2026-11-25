@@ -9,42 +9,117 @@
   let micStream = null;
   let requestId = 0;
   let requesting = false;
+let activeCamera = null;
+let manualStopped = false;
+let lifecycleBlocked = false;
 
-  function updateButtons() {
-    startButton.disabled = requesting || micStream !== null;
-    stopButton.disabled = !requesting && micStream === null;
+const piMicPermission =
+  document.getElementById("piAllowPhoneMic");
 
-    startButton.textContent = requesting
-      ? "마이크 연결 중..."
-      : "🎤 마이크 켜기";
+const inputDescription =
+  document.getElementById("soundInputDescription");
+
+function privacyOn() {
+  return Boolean(
+    document.getElementById("guardianHomeToggle")?.checked
+  );
+}
+
+function updateInputDescription() {
+  if (!inputDescription) return;
+
+  if (activeCamera === "pi") {
+    inputDescription.textContent =
+      piMicPermission?.checked
+        ? "휴대폰 마이크 · 현재 기기 주변 소리만 분석합니다."
+        : "Raspberry Pi 영상에는 소리가 없습니다. 휴대폰 마이크 사용을 허용해 주세요.";
+  } else if (activeCamera === "phone") {
+    inputDescription.textContent =
+      "휴대폰 마이크 · 현재 기기 주변 소리를 분석합니다.";
+  } else {
+    inputDescription.textContent =
+      "카메라 연결 후 소리 감지를 시작합니다.";
+  }
+}
+function updateButtons() {
+  const blocked =
+    lifecycleBlocked ||
+    privacyOn() ||
+    !activeCamera ||
+    (
+      activeCamera === "pi" &&
+      !piMicPermission?.checked
+    );
+
+  startButton.disabled =
+    blocked || requesting || micStream !== null;
+
+  stopButton.disabled =
+    !requesting && micStream === null;
+
+  startButton.textContent = requesting
+    ? "마이크 연결 중..."
+    : "🎤 마이크 켜기";
+}
+
+
+function stopMicrophone(message = "마이크 꺼짐") {
+  // 让尚未完成的权限请求失效
+  requestId += 1;
+  requesting = false;
+
+  const previousStream = micStream;
+  micStream = null;
+
+  const micDeviceName =
+    document.getElementById("micDeviceName");
+
+  if (micDeviceName) {
+    micDeviceName.textContent =
+      "사용 중인 마이크: 연결 전";
   }
 
-  function stopMicrophone(message = "마이크 꺼짐") {
-    // 让尚未完成的权限请求失效
-    requestId += 1;
-    requesting = false;
+  // 通知声音分析模块停止
+  document.dispatchEvent(
+    new Event("pawview:mic-stop")
+  );
 
-    const previousStream = micStream;
-    micStream = null;
-        const micDeviceName = document.getElementById("micDeviceName");
+  // 释放声音检测所使用的音轨
+  previousStream?.getTracks().forEach(
+    track => track.stop()
+  );
 
-    if (micDeviceName) {
-      micDeviceName.textContent = "사용 중인 마이크: 연결 전";
-    }
+  status.textContent = message;
 
-document.dispatchEvent(
-  new Event("pawview:mic-stop")
-);
+  updateButtons();
+}
 
-    previousStream?.getTracks().forEach(track => track.stop());
 
-    status.textContent = message;
-    updateButtons();
+async function startMicrophone() {
+  if (requesting || micStream) return;
+
+  if (lifecycleBlocked || privacyOn()) {
+    status.textContent =
+      "프라이버시 보호 또는 기기 상태로 마이크를 사용할 수 없습니다.";
+    return;
   }
 
-  async function startMicrophone() {
-    if (requesting || micStream) return;
+  if (!activeCamera) {
+    status.textContent =
+      "카메라를 먼저 연결해 주세요.";
+    return;
+  }
 
+  if (
+    activeCamera === "pi" &&
+    !piMicPermission?.checked
+  ) {
+    status.textContent =
+      "Raspberry Pi 연결 설정에서 휴대폰 마이크 사용을 허용해 주세요.";
+    return;
+  }
+
+  const requestedCamera = activeCamera;
     if (document.hidden) {
       status.textContent = "화면으로 돌아온 뒤 다시 켜 주세요.";
       return;
@@ -76,7 +151,17 @@ document.dispatchEvent(
 
 
       // 等待授权期间关闭或切到后台，不再启用麦克风
-      if (thisRequest !== requestId || document.hidden) {
+if (
+  thisRequest !== requestId ||
+  document.hidden ||
+  privacyOn() ||
+  manualStopped ||
+  requestedCamera !== activeCamera ||
+  (
+    requestedCamera === "pi" &&
+    !piMicPermission?.checked
+  )
+) {
         acquiredStream.getTracks().forEach(track => track.stop());
 
         if (thisRequest === requestId) {
@@ -99,9 +184,9 @@ document.dispatchEvent(
             const micDeviceName = document.getElementById("micDeviceName");
 
       if (micDeviceName) {
-        micDeviceName.textContent =
-          "사용 중인 마이크: " +
-          (acquiredStream.getAudioTracks()[0]?.label || "기본 마이크");
+       micDeviceName.textContent =
+  "사용 중인 마이크: 휴대폰 마이크 (현재 기기) · " +
+  (acquiredStream.getAudioTracks()[0]?.label || "기본 마이크");
       }
 
 document.dispatchEvent(
@@ -110,11 +195,12 @@ document.dispatchEvent(
   })
 );
 
-      status.textContent =
-        "● 마이크 사용 중 · 분석 상태는 아래 결과에서 확인해 주세요.";
+status.textContent =
+  activeCamera === "pi"
+    ? "● 휴대폰 마이크 사용 중 · Raspberry Pi 현장 소리 아님"
+    : "● 휴대폰 마이크 사용 중 · 소리 분석 진행";
 
-
-      updateButtons();
+updateButtons();
 
       tracks.forEach(track => {
         track.addEventListener("ended", () => {
@@ -156,19 +242,141 @@ stopMicrophone(message);
     }
   }
 
-  function stopForPrivacy() {
-    if (!micStream && !requesting) return;
+function stopForPrivacy() {
+  activeCamera = null;
+  manualStopped = true;
 
-    stopMicrophone(
-      "백그라운드 전환으로 마이크를 껐습니다. 다시 켜 주세요."
+  stopMicrophone(
+    "백그라운드 전환으로 마이크를 껐습니다. 카메라를 다시 연결해 주세요."
+  );
+
+  updateInputDescription();
+  updateButtons();
+}
+
+// 统一摄像头声音联动接口
+
+window.PawViewSoundMonitor = {
+
+  cameraStarted(source) {
+
+    if (source !== "phone" && source !== "pi") return;
+
+    // 同一次连接不重复自动启动
+    if (activeCamera === source) return;
+
+    if (activeCamera || micStream || requesting) {
+      stopMicrophone();
+    }
+
+    activeCamera = source;
+    manualStopped = false;
+
+    updateInputDescription();
+    updateButtons();
+
+    if (privacyOn() || lifecycleBlocked) return;
+
+    // Pi 目前没有音轨，必须得到明确允许
+    if (source === "pi" && !piMicPermission?.checked) {
+      status.textContent =
+        "영상 연결됨 · 휴대폰 마이크 사용 허용 필요";
+      return;
+    }
+
+    startMicrophone();
+  },
+
+  cameraStopped(source) {
+
+    // 不允许旧设备的断开事件关闭新设备
+    if (activeCamera !== source) return;
+
+    activeCamera = null;
+    manualStopped = false;
+
+    stopMicrophone("카메라 연결 해제 · 소리 감지 중지");
+
+    updateInputDescription();
+    updateButtons();
+  },
+
+  isRequesting() {
+    return requesting;
+  },
+
+  cloneForRecording() {
+
+    if (privacyOn() || activeCamera !== "phone") {
+      return null;
+    }
+
+    const tracks = micStream?.getAudioTracks()
+      .filter(track => track.readyState === "live");
+
+    if (!tracks?.length) return null;
+
+    // 录像拥有自己的轨道副本
+    return new MediaStream(
+      tracks.map(track => track.clone())
     );
   }
+};
 
-  startButton.addEventListener("click", startMicrophone);
+// 用户手动开启
+startButton.addEventListener("click", () => {
+  manualStopped = false;
+  startMicrophone();
+});
 
-  stopButton.addEventListener("click", () => {
-    stopMicrophone();
+// 用户手动关闭
+stopButton.addEventListener("click", () => {
+  manualStopped = true;
+  stopMicrophone("사용자가 소리 감지를 중지했습니다.");
+});
+
+// 树莓派本机麦克风授权变化
+piMicPermission?.addEventListener("change", () => {
+
+  updateInputDescription();
+
+  if (activeCamera === "pi") {
+
+    if (!piMicPermission.checked) {
+      manualStopped = true;
+
+      stopMicrophone(
+        "휴대폰 마이크 사용 허용이 해제되었습니다."
+      );
+
+    } else if (!micStream && !requesting) {
+      status.textContent =
+        "휴대폰 마이크 사용 허용됨 · 마이크 켜기 버튼으로 시작하세요.";
+    }
+  }
+
+  updateButtons();
+});
+
+// 隐私快门
+document.getElementById("guardianHomeToggle")
+  ?.addEventListener("change", () => {
+
+    if (privacyOn()) {
+      activeCamera = null;
+      manualStopped = true;
+
+      stopMicrophone("프라이버시 모드 · 마이크 사용 중지");
+
+      updateInputDescription();
+    }
+
+    updateButtons();
   });
+
+updateInputDescription();
+updateButtons();
+
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stopForPrivacy();
@@ -192,24 +400,38 @@ try {
     }
   );
 
-  Promise.resolve(listenerResult).catch(error => {
-    console.error("마이크 백그라운드 감시 등록 실패:", error);
-    stopMicrophone(
-      "백그라운드 감시 연결에 실패했습니다. 마이크 사용을 중단했습니다."
-    );
-    startButton.disabled = true;
-  });
-} catch (error) {
+
+Promise.resolve(listenerResult).catch(error => {
+  lifecycleBlocked = true;
+
   console.error("마이크 백그라운드 감시 등록 실패:", error);
+
   stopMicrophone(
     "백그라운드 감시 연결에 실패했습니다. 마이크 사용을 중단했습니다."
   );
+
+  startButton.disabled = true;
+});
+
+} catch (error) {
+  lifecycleBlocked = true;
+
+  console.error("마이크 백그라운드 감시 등록 실패:", error);
+
+  stopMicrophone(
+    "백그라운드 감시 연결에 실패했습니다. 마이크 사용을 중단했습니다."
+  );
+
   startButton.disabled = true;
 }
 
     } else {
-      status.textContent =
-        "백그라운드 감시 기능을 찾지 못해 마이크를 사용할 수 없습니다.";
+      lifecycleBlocked = true;
+
+      stopMicrophone(
+        "백그라운드 감시 기능을 찾지 못해 마이크를 사용할 수 없습니다."
+      );
+
       startButton.disabled = true;
     }
   }

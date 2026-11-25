@@ -165,18 +165,30 @@
         <div class="brand-mark">🐾</div>
         <div><strong>PawView</strong><small>반려동물 스마트 케어</small></div>
       </div>
-      <div class="pet-switcher">
-       <div class="pet-avatar" id="petAvatar">🐶</div>
-<div class="pet-meta">
-  <strong id="petName">두두</strong>
-  <small id="petTypeLabel">강아지 · 홈 모니터링</small>
-</div>
-<select id="petSelect" aria-label="반려동물 선택">
-  <option value="dog" selected>강아지</option>
-  <option value="cat">고양이 · 데모</option>
-</select>
 
-      </div>
+<div class="pet-switcher">
+
+  <button
+    type="button"
+    class="sidebar-profile-entry"
+    data-goto="pet-profile"
+    aria-label="반려동물 프로필 열기"
+  >
+    <span class="pet-avatar" id="petAvatar">🐶</span>
+
+    <span class="pet-meta">
+      <strong id="petName">두두</strong>
+      <small id="petTypeLabel">강아지 · 홈 모니터링</small>
+    </span>
+  </button>
+
+  <select id="petSelect" aria-label="반려동물 선택">
+    <option value="dog" selected>강아지</option>
+    <option value="cat">고양이 · 데모</option>
+  </select>
+
+</div>
+
       <nav class="nav-menu" aria-label="주 메뉴">
         <button class="nav-item active" data-page="monitor"><span>▦</span> 실시간 모니터링</button>
         <button class="nav-item" data-page="report">
@@ -211,7 +223,14 @@
       <section class="page active" id="page-monitor">
         <div class="welcome-row home-pet-card">
   <div class="home-pet-info">
-    <div class="home-pet-avatar" id="homePetAvatar" aria-hidden="true">🐶</div>
+   <button
+  type="button"
+  class="home-pet-avatar"
+  id="homePetAvatar"
+  data-goto="pet-profile"
+  aria-label="반려동물 프로필 열기"
+  title="반려동물 프로필 열기"
+>🐶</button>
 
     <div class="home-pet-details">
       <h2 id="welcomePet">두두</h2>
@@ -298,41 +317,24 @@
     <h3>실시간 화면</h3>
     <p>이 기기의 카메라 미리보기 · 원격 모니터링 아님</p>
   </div>
+  <div class="camera-heading-actions">
   <span class="live-label" id="cameraModeLabel">DEMO</span>
-</div>
-
-<!-- 摄像头来源切换 -->
-<div class="camera-source-switch" id="cameraSourceSwitch">
-  <button
-    type="button"
-    class="camera-source-btn is-active"
-    id="cameraSourcePhone"
-    aria-pressed="true"
-  >
-    📱 스마트폰
-  </button>
 
   <button
     type="button"
-    class="camera-source-btn"
-    id="cameraSourcePi"
+    id="cameraFullscreenButton"
+    class="secondary-button camera-fullscreen-button"
     aria-pressed="false"
   >
-    📡 Raspberry Pi 4
+    ⛶ 전체화면
   </button>
 </div>
-
-<!-- 树莓派视频区域：尚未连接真实硬件 -->
-<div class="pi-preview" id="piPreview" hidden>
-  <div class="pi-preview-icon">📡</div>
-  <strong>Raspberry Pi 4 연결 대기</strong>
-  <p>
-    카메라 스트리밍 기능은 아직 연결되지 않았습니다.
-  </p>
-  <span>
-    하드웨어 및 영상 전송 방식 확인 후 연동 예정
-  </span>
 </div>
+
+
+
+<!-- Raspberry Pi 4 영상 미리보기 -->
+<div class="pi-preview" id="piPreview" hidden></div>
 
             <div class="camera-scene" id="cameraScene">
               <video id="cameraVideo" autoplay playsinline muted></video>
@@ -354,46 +356,38 @@
               <div class="scene-time" id="sceneTime">CAM 01 · DEMO</div>
               <div class="scene-caption" id="sceneCaption">두두의 시뮬레이션 화면</div>
             </div>
-
+<button
+  type="button"
+  id="returnPhoneCameraButton"
+  class="secondary-button"
+  hidden
+>
+  스마트폰 카메라로 돌아가기
+</button>
 <div class="camera-status">
 
-  <!-- 主要状态始终显示 -->
   <p id="cameraConnectionStatus" aria-live="polite">
     카메라: 연결 전
   </p>
 
-  <!-- 其他技术信息按需展开 -->
-  <details class="camera-extra-status">
-    <summary>연결 상세 정보 보기</summary>
-
-    <div class="camera-extra-status-content">
-      <p id="cameraVideoStatus">화면: 대기 중</p>
-      <p id="cameraNetworkStatus">네트워크: 확인 중</p>
-      <p id="cameraPreviewTime">
-        미리보기 시간: 00:00:00
-      </p>
-    </div>
-  </details>
+  <button
+    type="button"
+    id="openCameraSettingsButton"
+    class="text-button"
+  >
+    연결 설정 열기 →
+  </button>
 
 </div>
 
 
-<details class="camera-help">
-  <summary>카메라 기능 안내 보기</summary>
-  <p>
-    미리보기 시간은 카메라를 연결한 뒤 지난 시간입니다.
-    녹화 시 카메라 화면과 마이크 소리가 함께 저장됩니다.
-    인터넷 연결이 끊겨도 로컬 카메라 미리보기는 계속될 수 있습니다.
-  </p>
-</details>
-
 
             <div class="camera-controls">
-              <button class="primary-button" id="connectCameraButton">◎ 실제 카메라 연결</button>
-              <button class="secondary-button" id="stopCameraButton" disabled>■ 카메라 연결 해제</button>
-              <button class="secondary-button" id="playButton">▶ 시뮬레이션 화면 재생</button>
-              <button class="secondary-button" id="snapshotButton">▣ 화면 캡처 저장</button>
-              <button
+ <button class="primary-button" id="connectCameraButton">◎ 실제 카메라 연결</button>
+<button class="secondary-button" id="stopCameraButton" disabled>■ 카메라 연결 해제</button>
+<button class="secondary-button" id="playButton">▶ 시뮬레이션 화면 재생</button>
+ <button class="secondary-button" id="snapshotButton">▣ 화면 캡처 저장</button>
+ <button
   class="secondary-button"
   id="recordCameraButton"
   type="button"
@@ -409,99 +403,37 @@
 >
   녹화 안 함 · 소리 포함 · 최대 60초
 </span>
+</div>            
+<div id="cameraSettingsPhone">
 
+  <details class="camera-extra-status">
+    <summary>연결 상세 정보 보기</summary>
 
-              <span class="camera-hint" id="cameraHint">실제 카메라 연결 전 · 시뮬레이션 화면</span>
-            </div>
+    <div class="camera-extra-status-content">
+      <p id="cameraVideoStatus">화면: 대기 중</p>
+      <p id="cameraNetworkStatus">네트워크: 확인 중</p>
+      <p id="cameraPreviewTime">
+        미리보기 시간: 00:00:00
+      </p>
+    </div>
+  </details>
 
-<!-- Raspberry Pi 4 摄像头配置 -->
-<details class="pi-camera-panel" id="piCameraPanel">
-  <summary class="pi-camera-summary">
-    <span>📡 Raspberry Pi 4 카메라</span>
-    <span id="piCameraBadge" class="pi-camera-badge">
-      연동 전
-    </span>
-  </summary>
+  <span class="camera-hint" id="cameraHint">
+    실제 카메라 연결 전 · 시뮬레이션 화면
+  </span>
 
-  <div class="pi-camera-body">
-    <p class="pi-camera-description">
-      Raspberry Pi 4 카메라 연결 정보를 설정합니다.
-      실제 영상 연동은 하드웨어 준비 후 진행합니다.
+  <details class="camera-help">
+    <summary>카메라 기능 안내 보기</summary>
+    <p>
+      미리보기 시간은 카메라를 연결한 뒤 지난 시간입니다.
+      녹화 시 카메라 화면과 마이크 소리가 함께 저장됩니다.
+      인터넷 연결이 끊겨도 로컬 카메라 미리보기는 계속될 수 있습니다.
     </p>
+  </details>
 
-    <form id="piCameraForm">
-      <div class="pi-camera-field">
-        <label for="piCameraName">기기 이름</label>
-        <input
-          id="piCameraName"
-          type="text"
-          value="Raspberry Pi 4"
-          maxlength="50"
-          required
-        >
-      </div>
+</div>
 
-      <div class="pi-camera-field">
-        <label for="piCameraHost">IP 주소 또는 호스트명</label>
-        <input
-          id="piCameraHost"
-          type="text"
-          placeholder="예: 192.168.0.25"
-          autocomplete="off"
-          required
-        >
-      </div>
-
-      <div class="pi-camera-field">
-        <label for="piCameraPort">포트 번호</label>
-        <input
-          id="piCameraPort"
-          type="number"
-          placeholder="예: 8554"
-          min="1"
-          max="65535"
-          inputmode="numeric"
-        >
-      </div>
-
-      <div class="pi-camera-field">
-        <label for="piCameraProtocol">영상 전송 방식</label>
-        <select id="piCameraProtocol">
-          <option value="unknown">
-            미정 · 팀 확인 필요
-          </option>
-          <option value="rtsp">RTSP</option>
-          <option value="mjpeg">HTTP / MJPEG</option>
-          <option value="webrtc">WebRTC</option>
-        </select>
-      </div>
-
-      <button
-        type="submit"
-        class="primary-button pi-camera-save"
-      >
-        설정 저장
-      </button>
-    </form>
-
-    <p
-      id="piCameraStatus"
-      class="pi-camera-status"
-      role="status"
-      aria-live="polite"
-    >
-      연결 정보가 저장되지 않았습니다.
-    </p>
-
-    <p class="pi-camera-note">
-      현재는 설정 저장 기능만 제공됩니다.
-      실제 연결 및 영상 송출 기능은 개발 예정입니다.
-    </p>
-  </div>
-</details>
-<!-- Raspberry Pi 4 摄像头配置结束 -->
-
-           <details class="monitor-advanced">
+<details class="monitor-advanced">
   <summary>고급 감지 기능 · AI / 소리 분석</summary>
   <div class="monitor-advanced-content"> 
             <article class="panel" id="dogVisionPanel">
@@ -580,8 +512,10 @@
 <article class="panel" id="soundMonitorPanel">
   <div class="panel-heading">
     <div>
-      <h3>강아지 소리 감지</h3>
-      <p>이 기기의 마이크로 주변 소리를 확인해요.</p>
+<h3>강아지 소리 감지</h3>
+<p id="soundInputDescription">
+  카메라 연결 후 소리 감지를 시작합니다.
+</p>
     </div>
   </div>
 
@@ -1311,13 +1245,25 @@
         </div>
       </section>
 
-      <section class="page" id="page-settings">
-        <div class="welcome-row"><div><h2>기기 설정</h2><p>데모 기기와 프로토타입 설정을 관리합니다.</p></div></div>
-        <article class="panel settings-page-panel">
+<section class="page" id="page-pet-profile">
+
+  <div class="welcome-row pet-profile-header">
+    <button
+      type="button"
+      class="secondary-button"
+      data-goto="monitor"
+    >
+      ‹ 뒤로
+    </button>
+
+    <h2>반려동물 프로필</h2>
+  </div>
+
+  <article class="panel settings-page-panel">
           <div class="panel-heading">
   <div>
-    <h3>우리 강아지 프로필</h3>
-    <p>강아지 정보를 저장하고 수정하세요.</p>
+    <h3>내 반려동물</h3>
+<p>반려동물 정보를 확인하고 수정하세요.</p>
   </div>
 </div>
 
@@ -1385,7 +1331,7 @@
     반려동물의 기본 정보를 한눈에 확인할 수 있습니다.
   </p>
 </div>
-<details class="settings-fold">
+<details class="settings-fold" open>
   <summary>프로필 상세 수정</summary>
   <div class="settings-fold-content">
 <label for="dogName">이름 *</label>
@@ -1527,6 +1473,160 @@
   사진과 돌봄 기록은 이 기기에 저장됩니다.
   체중 입력은 건강 진단을 의미하지 않습니다.
 </p>
+
+  </article>
+</section>
+
+<!-- PawView 기기 설정 -->
+<section class="page" id="page-settings">
+
+  <div class="welcome-row">
+    <div>
+      <h2>기기 설정</h2>
+      <p>카메라 및 앱 설정을 관리합니다.</p>
+    </div>
+  </div>
+
+  <article class="panel settings-page-panel">
+
+    <div id="cameraConnectionSettings"
+         class="camera-connection-settings">
+
+      <div class="panel-heading">
+        <div>
+<h3>Raspberry Pi 4 연결</h3>
+<p>원격 카메라의 영상 연결을 설정합니다.</p>
+        </div>
+      </div>
+
+
+<!-- Raspberry Pi 4 摄像头配置 -->
+<details class="pi-camera-panel" id="piCameraPanel">
+  <summary class="pi-camera-summary">
+    <span>📡 Raspberry Pi 4 카메라</span>
+    <span id="piCameraBadge" class="pi-camera-badge">
+      연동 전
+    </span>
+  </summary>
+
+  <div class="pi-camera-body">
+    <p class="pi-camera-description">
+      Raspberry Pi 4 카메라 연결 정보를 설정합니다.
+      실제 영상 연동은 하드웨어 준비 후 진행합니다.
+    </p>
+
+    <form id="piCameraForm">
+      <div class="pi-camera-field">
+        <label for="piCameraName">기기 이름</label>
+        <input
+          id="piCameraName"
+          type="text"
+          value="Raspberry Pi 4"
+          maxlength="50"
+          required
+        >
+      </div>
+
+      <div class="pi-camera-field">
+        <label for="piCameraHost">IP 주소 또는 호스트명</label>
+        <input
+          id="piCameraHost"
+          type="text"
+          placeholder="예: 192.168.0.25"
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <div class="pi-camera-field">
+        <label for="piCameraPort">포트 번호</label>
+        <input
+          id="piCameraPort"
+          type="number"
+          placeholder="예: 8554"
+          min="1"
+          max="65535"
+          inputmode="numeric"
+        >
+      </div>
+
+      <div class="pi-camera-field">
+        <label for="piCameraProtocol">영상 전송 방식</label>
+        <select id="piCameraProtocol">
+          <option value="unknown">
+            미정 · 팀 확인 필요
+          </option>
+          <option value="rtsp">RTSP</option>
+          <option value="mjpeg">HTTP / MJPEG</option>
+          <option value="webrtc">WebRTC</option>
+        </select>
+      </div>
+
+      <div class="pi-camera-field">
+        <label for="piCameraPath">영상 경로 (HTTP/MJPEG)</label>
+        <input id="piCameraPath" type="text" value="/stream"
+          placeholder="/stream" maxlength="200" autocomplete="off">
+      </div>
+
+      <button
+        type="submit"
+        class="primary-button pi-camera-save"
+      >
+        설정 저장
+      </button>
+    </form>
+
+    <p
+      id="piCameraStatus"
+      class="pi-camera-status"
+      role="status"
+      aria-live="polite"
+    >
+      연결 정보가 저장되지 않았습니다.
+    </p>
+
+<p class="pi-camera-note">
+  HTTP/MJPEG 영상 연결을 지원합니다.
+  RTSP 및 WebRTC는 추가 연동이 필요합니다.
+  현재 Raspberry Pi 영상에는 오디오가 포함되지 않습니다.
+</p>
+  </div>
+</details>
+<!-- Raspberry Pi 4 摄像头配置结束 -->
+
+<div class="pi-audio-option">
+
+  <label for="piAllowPhoneMic">
+    <input type="checkbox" id="piAllowPhoneMic">
+
+    <span>
+      <strong>휴대폰 마이크 사용 허용</strong>
+      <small>
+        Raspberry Pi 영상 연결 후 이 기기의 주변 소리를 분석합니다.
+        Raspberry Pi 현장의 소리는 수집하지 않습니다.
+      </small>
+    </span>
+
+  </label>
+
+</div>
+
+      <div id="piCameraActions"></div>
+
+      <p id="piConnectionMessage"
+         class="small-disclaimer"
+         aria-live="polite"></p>
+
+      <button
+        type="button"
+        class="secondary-button full-width"
+        data-goto="monitor"
+      >
+        실시간 화면으로 돌아가기
+      </button>
+
+    </div>
+
 <details class="settings-fold">
   <summary>데이터 백업 · 내보내기 및 복원</summary>
   <div class="settings-fold-content">
@@ -1756,6 +1856,7 @@
 <script type="module" src="./firebase-init.js"></script>
 <script type="module" src="./firebase-pets.js"></script>
 <script type="module" src="./firebase-auth.js"></script>
+<script type="module" src="./pawview-push.js"></script>
   
 <nav class="mobile-bottom-nav" aria-label="하단 메뉴">
   <button
@@ -1803,20 +1904,5 @@
     <small>설정</small>
   </button>
 </nav>
-
-<script>
-  // 每次打开页面只尝试一次，不反复请求麦克风权限
-  document.addEventListener("DOMContentLoaded", () => {
-    if (document.hidden) return;
-
-    const startButton = document.getElementById("startMicButton");
-
-    if (!startButton || startButton.disabled) return;
-
-    // 使用现有麦克风逻辑：
-    // 权限处理、等待模型、声音分析和后台关闭规则保持不变
-    startButton.click();
-  }, { once: true });
-</script>
 </body>
 </html>

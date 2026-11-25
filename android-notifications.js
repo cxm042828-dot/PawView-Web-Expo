@@ -7,7 +7,9 @@ import { LocalNotifications } from "https://cdn.jsdelivr.net/npm/@capacitor/loca
   const COOLDOWN = 10 * 60 * 1000;
   const STORAGE_KEY = "pawview.notification.lastTime";
 const CHANNEL_ID = "pawview_sound_alerts";
-setupNotificationChannel().catch(console.error);
+if (window.Capacitor?.getPlatform?.() === "android") {
+  setupNotificationChannel().catch(error => console.warn("알림 채널 생성 실패:", error));
+}
 async function setupNotificationChannel() {
   await LocalNotifications.createChannel({
     id: CHANNEL_ID,
@@ -16,7 +18,7 @@ async function setupNotificationChannel() {
     importance: 4,
     visibility: 1,
     vibration: true,
-    sound: "pawview_alert"
+    sound: "default"
   });
 }
   let sending = false;

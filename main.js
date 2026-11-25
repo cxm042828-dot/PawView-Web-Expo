@@ -46,7 +46,7 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
 }
 
-
+let phoneCameraRequest = 0;
 let cameraStream = null;
 let realCameraActive = false;
 let cameraPreviewStartedAt = null;
@@ -104,9 +104,15 @@ function setCameraStatus(connection, picture) {
 }
 
 function stopRealCamera(showMessage = true) {
+
+  phoneCameraRequest += 1;
+
+  window.PawViewRecording?.stop?.(true);
+
+  window.PawViewSoundMonitor?.cameraStopped("phone");
+
   window.PawDogDetector?.stop();
   stopCameraPreviewTimer();
-
 
   if (cameraStream) {
     cameraStream.getTracks().forEach(track => track.stop());
@@ -141,6 +147,10 @@ function stopRealCamera(showMessage = true) {
 }
 
 async function connectRealCamera() {
+  if (document.querySelector(".camera-panel")?.classList.contains("pi-mode")) {
+    showToast("스마트폰 카메라 모드를 선택해 주세요.");
+    return;
+  }
   if (guardianAtHome) {
   showToast("보호자 재실 중에는 카메라를 연결할 수 없습니다.");
   return;
@@ -162,7 +172,7 @@ async function connectRealCamera() {
     $("cameraPlaceholder").classList.add("visible");
     return;
   }
-
+const requestId = ++phoneCameraRequest;
   $("connectCameraButton").disabled = true;
   $("connectCameraButton").textContent = "카메라 연결 중...";
   setCameraHint("카메라 권한을 기다리는 중입니다...");
@@ -171,7 +181,11 @@ async function connectRealCamera() {
       video: { facingMode: "user" },
       audio: false
     });
-    if (guardianAtHome) {
+    if (requestId !== phoneCameraRequest) {
+  stream.getTracks().forEach(track => track.stop());
+  return;
+}
+    if (guardianAtHome || document.querySelector(".camera-panel")?.classList.contains("pi-mode")) {
   stream.getTracks().forEach(track => track.stop());
 
   $("connectCameraButton").disabled = false;
@@ -198,6 +212,23 @@ async function connectRealCamera() {
        setCameraStatus("연결됨", "불러오는 중");
     video.srcObject = stream;
     await video.play();
+    if (
+  requestId !== phoneCameraRequest ||
+  cameraStream !== stream
+) {
+  stream.getTracks().forEach(track => track.stop());
+  return;
+}
+
+if (
+  document.hidden ||
+  guardianAtHome ||
+  document.querySelector(".camera-panel")
+    ?.classList.contains("pi-mode")
+) {
+  stopRealCamera(false);
+  return;
+}
     setCameraStatus("연결됨", "표시 중");
 
     realCameraActive = true;
@@ -213,11 +244,13 @@ async function connectRealCamera() {
     $("connectCameraButton").textContent = "✓ 실제 카메라 연결됨";
     $("stopCameraButton").disabled = false;
     $("playButton").disabled = true;
-    $("cameraHint").textContent = "실제 카메라 영상 표시 중 · 오디오는 사용하지 않습니다";
+   $("cameraHint").textContent =
+  "실제 카메라 영상 표시 중 · 소리 감지는 휴대폰 마이크를 사용합니다.";
     $("sceneTime").textContent = "● REAL CAMERA";
     $("sceneCaption").textContent = "실시간 카메라 영상";
     renderPet();
     showToast("카메라 연결에 성공했습니다!");
+    window.PawViewSoundMonitor?.cameraStarted("phone");
     stream.getVideoTracks().forEach(track => {
       track.addEventListener("ended", () => {
         stopRealCamera(false);
@@ -227,6 +260,7 @@ async function connectRealCamera() {
       });
     });
     } catch (error) {
+      if (requestId !== phoneCameraRequest) return;
     console.error("카메라 연결 실패:", error);
 // 摄像头异常接入统一设备错误管理
 window.pawviewSetDeviceIssue?.(
@@ -276,7 +310,17 @@ $("cameraVideo").addEventListener("error", () => {
   setCameraStatus("영상 오류", "표시 중지");
   setCameraHint("영상을 표시하지 못했습니다. 카메라를 다시 연결해 주세요.");
 });
-
+window.PawViewPhoneCamera = {
+  stopForSwitch() {
+    if (
+      cameraStream ||
+      realCameraActive ||
+      $("connectCameraButton").disabled
+    ) {
+      stopRealCamera(false);
+    }
+  }
+};
 $("connectCameraButton").addEventListener("click", connectRealCamera);
 $("stopCameraButton").addEventListener("click", () => {
   stopRealCamera(true);
@@ -779,29 +823,147 @@ if (homeRest) {
 }
 
 
+// PawView：同一个摄像头预览容器进入或退出全屏
+function setCameraFullscreen(enabled) {
+  const panel = document.querySelector(
+    "#page-monitor .camera-panel"
+  );
 
-function navigate(page) {
-  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
-  const target = $(`page-${page}`);
-  if (target) target.classList.add("active");
-  document.querySelectorAll(".nav-item, .mobile-nav-item").forEach(el => {
-  el.classList.toggle("active", el.dataset.page === page);
-});
-  const titles = {
-  monitor: "실시간 모니터링",
-  report: "건강 리포트",
-  community: "양육 커뮤니티",
-  location: "위치 및 안전",
-  settings: "기기 설정"
-};
+  const button = $("cameraFullscreenButton");
 
-  $("pageTitle").textContent = titles[page] || "실시간 모니터링";
-  window.scrollTo({top:0, behavior:"smooth"});
+  if (!panel || !button) return;
+
+  const active = Boolean(enabled);
+
+  panel.classList.toggle("paw-fullscreen", active);
+
+  document.body.classList.toggle(
+    "paw-camera-fullscreen",
+    active
+  );
+
+  button.textContent = active
+    ? "✕ 닫기"
+    : "⛶ 전체화면";
+
+  button.setAttribute(
+    "aria-pressed",
+    String(active)
+  );
 }
 
+// 页面切换
+function navigate(page, scrollTargetId = null) {
+  const target = $(`page-${page}`);
+
+  if (!target) return;
+
+  // 当前版本的猫咪是演示资料，
+  // 避免进入狗狗档案后误认为正在编辑猫咪
+  if (page === "pet-profile" && currentPet !== "dog") {
+    showToast("고양이는 데모 프로필입니다. 강아지 프로필을 선택해 주세요.");
+    return;
+  }
+
+  // 离开首页前关闭全屏，但不停止摄像头
+  if (page !== "monitor") {
+    setCameraFullscreen(false);
+  }
+
+  document.querySelectorAll(".page").forEach(el => {
+    el.classList.remove("active");
+  });
+
+  target.classList.add("active");
+
+  // 档案页面属于首页的子页面
+  const navPage = page === "pet-profile"
+    ? "monitor"
+    : page;
+
+  document.querySelectorAll(
+    ".nav-item, .mobile-nav-item"
+  ).forEach(el => {
+    el.classList.toggle(
+      "active",
+      el.dataset.page === navPage
+    );
+  });
+
+  const titles = {
+    monitor: "실시간 모니터링",
+    report: "건강 리포트",
+    community: "양육 커뮤니티",
+    location: "위치 및 안전",
+    settings: "기기 설정",
+    "pet-profile": "반려동물 프로필"
+  };
+
+  $("pageTitle").textContent =
+    titles[page] || "실시간 모니터링";
+
+  if (scrollTargetId && $(scrollTargetId)) {
+    requestAnimationFrame(() => {
+      $(scrollTargetId).scrollIntoView({
+        behavior: "auto",
+        block: "start"
+      });
+    });
+  } else {
+    window.scrollTo({
+      top: 0,
+      behavior: "auto"
+    });
+  }
+
+  // 返回首页后，如视频被浏览器暂停，
+  // 尝试恢复同一个已有视频流，不重新申请权限。
+  if (page === "monitor" && realCameraActive && cameraStream) {
+    const video = $("cameraVideo");
+
+    if (video && video.srcObject === cameraStream && video.paused) {
+      video.play().catch(error => {
+        console.warn("카메라 미리보기 재생 확인:", error);
+      });
+    }
+  }
+}
+
+// 保留现有 data-goto 页面入口
 document.querySelectorAll("[data-goto]").forEach(button => {
-  button.addEventListener("click", () => navigate(button.dataset.goto));
+  button.addEventListener("click", () => {
+    navigate(button.dataset.goto);
+  });
 });
+
+// 全屏按钮
+$("cameraFullscreenButton")?.addEventListener("click", () => {
+  const panel = document.querySelector(
+    "#page-monitor .camera-panel"
+  );
+
+  if (!panel) return;
+
+  setCameraFullscreen(
+    !panel.classList.contains("paw-fullscreen")
+  );
+});
+
+// 电脑浏览器通过 Esc 退出全屏
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    document.body.classList.contains("paw-camera-fullscreen")
+  ) {
+    setCameraFullscreen(false);
+  }
+});
+
+// 首页跳转至设置中的摄像头连接区域
+$("openCameraSettingsButton")?.addEventListener("click", () => {
+  navigate("settings", "cameraConnectionSettings");
+});
+
 
 $("petSelect").addEventListener("change", (event) => {
   currentPet = event.target.value;
@@ -811,6 +973,15 @@ $("petSelect").addEventListener("change", (event) => {
 });
 
 $("playButton").addEventListener("click", () => {
+
+  if (
+    document.querySelector(".camera-panel")
+      ?.classList.contains("pi-mode")
+  ) {
+    showToast("스마트폰 카메라 모드를 먼저 선택해 주세요.");
+    return;
+  }
+
   if (realCameraActive) {
     showToast("실제 카메라가 연결되어 있습니다. 먼저 카메라 연결을 해제해 주세요.");
     return;
@@ -1024,6 +1195,8 @@ $("safeButton").addEventListener("click", () => {
     : "안전 구역 시뮬레이션을 껐습니다.");
 });
 // 根据模拟的保护者位置自动更新隐私快门 UI
+
+// 根据模拟的保护者位置自动更新隐私快门 UI
 function updateGuardianPrivacyUI() {
   const locationStatus = $("guardianLocationStatus");
   const shutterStatus = $("privacyShutterStatus");
@@ -1034,8 +1207,11 @@ function updateGuardianPrivacyUI() {
     locationStatus.textContent = "재실 중 (시뮬레이션)";
     shutterStatus.textContent = "닫힘 · 카메라 사용 제한";
 
-    // 保护者回家时停止当前 App 摄像头
-    if (cameraStream) {
+    // 停止已连接或正在申请权限的手机摄像头
+    if (
+      cameraStream ||
+      $("connectCameraButton").disabled
+    ) {
       stopRealCamera(false);
     }
   } else {
@@ -1043,6 +1219,7 @@ function updateGuardianPrivacyUI() {
     shutterStatus.textContent = "열림 · 카메라 사용 가능";
   }
 }
+
 
 $("guardianHomeToggle").addEventListener("change", e => {
   guardianAtHome = e.target.checked;
@@ -4107,8 +4284,12 @@ changes.forEach(change => {
 
 // 隐私保护：进入后台后关闭本机摄像头
 (() => {
-  function stopCameraForPrivacy() {
-    if (!cameraStream && !realCameraActive) return;
+function stopCameraForPrivacy() {
+  if (
+    !cameraStream &&
+    !realCameraActive &&
+    !$("connectCameraButton").disabled
+  ) return;
 
     stopRealCamera(false);
 
@@ -4411,6 +4592,19 @@ document.addEventListener("visibilitychange", () => {
 let recordingMicStream = null;
 let requestingMic = false;
 let cancelMicRequest = false;
+let savingRecording = false;
+// Explicit state used by camera mode switching; protects permission and save phases.
+window.PawViewRecording = {
+  isBusy: () => requestingMic || Boolean(recorder) || stopping || savingRecording,
+  stop: (releaseMicrophone = false) => {
+    if (requestingMic) cancelMicRequest = true;
+    if (recorder && !stopping) stopRecording();
+    // 隐私模式/断线时即时停止录音，stop 事件仍负责最终清理。
+    if (releaseMicrophone) {
+      recordingMicStream?.getTracks().forEach(track => track.stop());
+    }
+  }
+};
 
 // 固定本次录像开始时的宠物身份
 let recordingPet = null;
@@ -4498,7 +4692,10 @@ status.textContent = "녹화 종료 · 파일 준비 중…";
       stopRecording();
       return;
     }
-
+if (window.PawViewSoundMonitor?.isRequesting()) {
+  showToast("마이크 연결이 완료된 뒤 녹화해 주세요.");
+  return;
+}
     const sourceTrack = getLiveVideoTrack();
 
     if (!sourceTrack || document.hidden) {
@@ -4517,18 +4714,23 @@ requestingMic = true;
 button.disabled = true;
 status.textContent = "마이크 권한 확인 중…";
 
-recordingMicStream =
+const sharedMic =
+  window.PawViewSoundMonitor?.cloneForRecording();
+
+recordingMicStream = sharedMic ||
   await navigator.mediaDevices.getUserMedia({
     audio: true,
     video: false
   });
-if (document.hidden || cancelMicRequest) {
-  throw new Error("Recording cancelled in background");
+if (document.hidden || cancelMicRequest || guardianAtHome ||
+    document.querySelector(".camera-panel")?.classList.contains("pi-mode")) {
+  throw new Error("Recording cancelled by privacy/mode/background");
 }
 
 // 权限弹窗期间可能切后台或断开摄像头，需再次检查。
 if (
-  document.hidden ||
+  document.hidden || guardianAtHome ||
+  document.querySelector(".camera-panel")?.classList.contains("pi-mode") ||
   video.srcObject !== sourceStream ||
   sourceTrack.readyState !== "live"
 ) {
@@ -4579,6 +4781,7 @@ const mimeType = [
       });
 
      recorder.addEventListener("stop", async () => {
+  savingRecording = true;
   let downloadUrl = null;
   let link = null;
 
@@ -4720,6 +4923,7 @@ history.unshift({
 recordingMicStream = null;
 recordingPet = null;
 recordingDogId = null;
+savingRecording = false;
 requestingMic = false;
 cancelMicRequest = false;
 recorder = null;
@@ -5673,4 +5877,28 @@ if (initialTemperatureStatus) {
   window.setInterval(updateCameraStatus, 1500);
 
 renderDeviceIssues();
+})();
+
+// Home data-backed daily-care summary: open existing record editor/details.
+(() => {
+  const details = document.getElementById("careDetails");
+  if (!details) return;
+  ["todayFood", "todayWater", "todayWalk"].forEach(id => {
+    const card = document.getElementById(id)?.closest(".stat-card");
+    if (!card) return;
+    card.classList.add("paw-care-shortcut");
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-label", "돌봄 기록 상세 보기 및 작성");
+    const open = () => {
+      details.open = true;
+      details.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault(); open();
+      }
+    });
+  });
 })();

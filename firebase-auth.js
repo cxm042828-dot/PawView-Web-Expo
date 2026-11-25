@@ -22,9 +22,40 @@ const resetPasswordButton = document.getElementById("resetPasswordButton");
 
 const authMessage = document.getElementById("authMessage");
 
-// 初始状态：先隐藏主页，等待 Firebase 确认登录状态
-if (appShell) {
-  appShell.style.display = "none";
+// Keep the app private until Firebase has restored persisted credentials.
+if (appShell) appShell.style.display = "none";
+if (authScreen) {
+  authScreen.hidden = false;
+  authScreen.setAttribute("aria-busy", "true");
+}
+const authLoading = document.createElement("p");
+authLoading.id = "authRestoreStatus";
+authLoading.className = "auth-restore-status";
+authLoading.textContent = "로그인 상태 확인 중…";
+authLoading.setAttribute("role", "status");
+loginForm?.before(authLoading);
+const retryAuthButton = document.createElement("button");
+retryAuthButton.type = "button";
+retryAuthButton.className = "auth-submit";
+retryAuthButton.textContent = "다시 시도";
+retryAuthButton.hidden = true;
+retryAuthButton.addEventListener("click", () => window.location.reload());
+authLoading.after(retryAuthButton);
+if (loginForm) loginForm.hidden = true;
+if (registerForm) registerForm.hidden = true;
+let authResolved = false;
+let authRestoreTimer = window.setTimeout(() => {
+  if (!authResolved) {
+    authLoading.textContent = "연결 상태를 확인하고 있습니다. 인터넷 연결을 확인해 주세요.";
+    retryAuthButton.hidden = false;
+  }
+}, 8000);
+function finishAuthRestore() {
+  authResolved = true;
+  clearTimeout(authRestoreTimer);
+  authLoading.hidden = true;
+  retryAuthButton.hidden = true;
+  authScreen?.removeAttribute("aria-busy");
 }
 
 // 显示提示信息
@@ -148,6 +179,7 @@ resetPasswordButton.addEventListener("click", async () => {
 
 // Firebase 登录状态监听
 onAuthStateChanged(auth, (user) => {
+  finishAuthRestore();
   if (user) {
     authScreen.hidden = true;
 
@@ -165,6 +197,14 @@ onAuthStateChanged(auth, (user) => {
 
     showLogin();
   }
+}, (error) => {
+  finishAuthRestore();
+  console.error("Firebase 로그인 상태 복원 실패:", error);
+  if (appShell) appShell.style.display = "none";
+  if (authScreen) authScreen.hidden = false;
+  showLogin();
+  retryAuthButton.hidden = false;
+  showMessage("로그인 상태를 확인하지 못했습니다. 인터넷을 확인하고 다시 시도해 주세요.");
 });
 // 로그아웃 버튼
 const logoutButton = document.getElementById("logoutButton");
@@ -172,6 +212,8 @@ const logoutButton = document.getElementById("logoutButton");
 if (logoutButton) {
   logoutButton.addEventListener("click", async () => {
     try {
+      // Unregister before Firebase drops the authenticated Firestore session.
+      await window.PawViewPushUnregister?.();
       await signOut(auth);
       showMessage("로그아웃되었습니다.", false);
     } catch (error) {

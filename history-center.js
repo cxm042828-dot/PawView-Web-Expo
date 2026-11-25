@@ -236,6 +236,71 @@ saved.dogId === record.dogId &&
     render();
   }
 
+  // Android saves file paths in media history; show only this app's media files.
+  // Web downloads remain in the browser's Downloads folder and aren't indexed here.
+  function openMediaRecord(record) {
+    const path = typeof record.filePath === "string" ? record.filePath : "";
+    const packageName = window.Capacitor?.getPlatform?.() === "android"
+      ? "com.pawview.app" : "";
+    if (!packageName || !path.includes(`/Android/media/${packageName}/PawView/`)) {
+      alert("앱에서 열 수 있는 미디어 경로가 없습니다. PawView 앨범을 확인해 주세요.");
+      return;
+    }
+    const overlay = document.createElement("div");
+    overlay.className = "paw-media-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", "PawView 미디어 보기");
+    const container = document.createElement("div");
+    container.className = "paw-media-dialog";
+    const close = document.createElement("button");
+    close.type = "button";
+    close.textContent = "닫기";
+    close.className = "paw-media-close";
+    const content = record.type === "video"
+      ? document.createElement("video")
+      : document.createElement("img");
+    content.className = "paw-media-content";
+    if (record.type === "video") {
+      content.controls = true;
+      content.playsInline = true;
+      content.preload = "metadata";
+    } else content.alt = "PawView에서 촬영한 사진";
+    const message = document.createElement("p");
+    message.className = "paw-media-message";
+    message.textContent = "미디어를 불러오는 중…";
+    content.addEventListener("loadedmetadata", () => { message.textContent = ""; });
+    content.addEventListener("load", () => { message.textContent = ""; });
+    content.addEventListener("error", () => {
+      message.textContent = "미디어를 열 수 없습니다. 기기 PawView 앨범에서 확인해 주세요.";
+    });
+    const dismiss = () => {
+      if (record.type === "video") content.pause();
+      overlay.remove();
+    };
+    close.addEventListener("click", dismiss);
+    overlay.addEventListener("click", event => {
+      if (event.target === overlay) dismiss();
+    });
+    overlay.addEventListener("keydown", event => {
+      if (event.key === "Escape") dismiss();
+    });
+    container.append(close,content,message);
+    overlay.append(container);
+    document.body.append(overlay);
+    close.focus();
+    // file:// 与 content:// URI 均由 Android 原生插件返回，不能在 content:// 前再拼 file://。
+    const fileUrl = /^(file|content):\/\//i.test(path) ? path : `file://${path}`;
+    try {
+      const resolved = window.Capacitor?.convertFileSrc?.(fileUrl);
+      if (!resolved) throw new Error("Cannot convert Android media URI");
+      content.src = resolved;
+    } catch (error) {
+      console.warn("PawView 미디어 URL 변환 실패:", error);
+      message.textContent = "미디어를 열 수 없습니다. 기기 PawView 앨범에서 확인해 주세요.";
+    }
+  }
+
   function render() {
     let records = getAllRecords();
     const favorites = getFavorites();
@@ -244,7 +309,10 @@ const currentDogId = getCurrentDogId();
 
 records = records.filter(record => {
   if (currentPet === "dog") {
-    return record.dogId === currentDogId;
+    // Old pre-multi-pet records had no dogId; associate only with legacy default profile.
+    return record.pet !== "cat" &&
+      (record.dogId === currentDogId ||
+       (!record.dogId && currentDogId === "dog-default"));
   }
 
   if (currentPet === "cat") {
@@ -363,9 +431,11 @@ if (record.type === "activity") {
 
       if (record.type === "photo" || record.type === "video") {
         const pet = document.createElement("p");
-        pet.textContent = record.pet
-          ? `반려동물: ${record.pet}`
-          : "반려동물 정보 없음";
+        pet.textContent = record.pet === "cat"
+          ? "반려동물: 고양이"
+          : record.dogId
+            ? `반려견 기록 · ID: ${record.dogId}`
+            : "반려견 기록 · 이전 데이터";
 
         info.appendChild(pet);
       }
@@ -411,6 +481,13 @@ favoriteButton.addEventListener("click", () => {
         deleteRecord(record);
       });
 
+      if ((record.type === "photo" || record.type === "video") && record.filePath) {
+        const openButton = document.createElement("button");
+        openButton.type = "button";
+        openButton.textContent = record.type === "video" ? "동영상 열기" : "사진 보기";
+        openButton.addEventListener("click", () => openMediaRecord(record));
+        actions.prepend(openButton);
+      }
       actions.append(favoriteButton, deleteButton);
       item.append(info, actions);
       list.appendChild(item);
